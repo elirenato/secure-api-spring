@@ -1,4 +1,4 @@
-package com.company.secureapispring3.config;
+package com.company.secureapispring.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

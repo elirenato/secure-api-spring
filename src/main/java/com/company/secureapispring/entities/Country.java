@@ -1,4 +1,4 @@
-package com.company.secureapispring3.entities;
+package com.company.secureapispring.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

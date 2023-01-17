@@ -1,8 +1,8 @@
-package com.company.secureapispring3.controllers;
+package com.company.secureapispring.controllers;
 
 
-import com.company.secureapispring3.SecureApiSpring3ApplicationIT;
-import com.company.secureapispring3.utils.TestJWTUtils;
+import com.company.secureapispring.SecureApiSpringIT;
+import com.company.secureapispring.utils.TestJWTUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,9 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SecureApiSpring3ApplicationIT
-@AutoConfigureMockMvc
-public class CountryControllerTest {
+public class CountryControllerIT extends AbstractIT {
 
     private static String COUNTRY_ENDPOINT = "/api/countries";
 
@@ -27,7 +25,7 @@ public class CountryControllerTest {
     @Test
     public void testListCountries() throws Exception {
         this.mockMvc.perform(
-                    get(CountryControllerTest.COUNTRY_ENDPOINT)
+                    get(CountryControllerIT.COUNTRY_ENDPOINT)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestJWTUtils.encode("managers") )
                 )
                 .andDo(print())
@@ -42,7 +40,7 @@ public class CountryControllerTest {
     @Test
     public void testListCountriesWithoutAuthorization() throws Exception {
         this.mockMvc.perform(
-                        get(CountryControllerTest.COUNTRY_ENDPOINT)
+                        get(CountryControllerIT.COUNTRY_ENDPOINT)
                                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestJWTUtils.encode("operators") )
                 )
                 .andDo(print())
@@ -52,7 +50,7 @@ public class CountryControllerTest {
     @Test
     public void testListCountriesWithoutAuthentication() throws Exception {
         this.mockMvc.perform(
-                        get(CountryControllerTest.COUNTRY_ENDPOINT)
+                        get(CountryControllerIT.COUNTRY_ENDPOINT)
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized());

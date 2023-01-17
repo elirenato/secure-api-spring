@@ -1,4 +1,4 @@
-package com.company.secureapispring3.utils;
+package com.company.secureapispring.utils;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;

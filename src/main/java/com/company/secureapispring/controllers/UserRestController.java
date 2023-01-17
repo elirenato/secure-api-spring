@@ -1,4 +1,4 @@
-package com.company.secureapispring3.controllers;
+package com.company.secureapispring.controllers;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;

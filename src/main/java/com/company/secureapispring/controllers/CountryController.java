@@ -1,6 +1,6 @@
-package com.company.secureapispring3.controllers;
+package com.company.secureapispring.controllers;
 
-import com.company.secureapispring3.entities.Country;
+import com.company.secureapispring.entities.Country;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

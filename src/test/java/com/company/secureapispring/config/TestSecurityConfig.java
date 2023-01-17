@@ -1,6 +1,6 @@
-package com.company.secureapispring3.config;
+package com.company.secureapispring.config;
 
-import com.company.secureapispring3.utils.TestJWTUtils;
+import com.company.secureapispring.utils.TestJWTUtils;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
