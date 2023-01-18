@@ -1,20 +1,31 @@
 package com.company.secureapispring.controllers;
 
 import com.company.secureapispring.entities.Country;
+import com.company.secureapispring.services.CountryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/countries")
 public class CountryController {
-    @PreAuthorize("hasAuthority('managers')")
+    @Autowired
+    private CountryService countryService;
+
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public Country getCountry(@PathVariable Integer id) {
+        return countryService.getCountry(id);
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public List<Country> listAllCountries() {
-        return Arrays.asList(new Country(1, "BR", "Brazil"));
+        return countryService.listAllCountries();
     }
 }

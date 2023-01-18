@@ -1,6 +1,7 @@
 package com.company.secureapispring.controllers;
 
 import com.company.secureapispring.SecureApiSpringIT;
+import jakarta.transaction.Transactional;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -9,6 +10,7 @@ import org.testcontainers.utility.DockerImageName;
 
 @SecureApiSpringIT
 @AutoConfigureMockMvc
+@Transactional
 public abstract class AbstractIT {
  
   static final PostgreSQLContainer<?> dbContainer;
@@ -16,8 +18,8 @@ public abstract class AbstractIT {
   static {
     dbContainer =
      new PostgreSQLContainer<>(DockerImageName.parse("postgres:15.1"))
-      .withDatabaseName("test")
-      .withUsername("test")
+      .withDatabaseName("app_test")
+      .withUsername("app_test")
       .withPassword("change_me")
       .withReuse(true)
     ;

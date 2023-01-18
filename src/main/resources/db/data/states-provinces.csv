@@ -1,0 +1,14 @@
+id,abbreviation,name,country_id
+1,AB,Alberta,1
+2,BC,British Columbia,1
+3,MB,Manitoba,1
+4,NB,New Brunswick,1
+5,NL,Newfoundland and Labrador,1
+6,NS,Nova Scotia,1
+7,ON,Ontario,1
+8,PE,Prince Edward Island,1
+9,QC,Quebec,1
+10,SK,Saskatchewan,1
+11,NT,Northwest Territories,1
+12,NU,Nunavut,1
+13,YT,Yukon,1
