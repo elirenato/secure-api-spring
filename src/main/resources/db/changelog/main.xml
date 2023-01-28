@@ -19,7 +19,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="states_provinces">
+        <createTable tableName="state_provinces">
             <column name="id" type="int">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -34,7 +34,7 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="country_id"
-                                 baseTableName="states_provinces"
+                                 baseTableName="state_provinces"
                                  constraintName="fk_country_id"
                                  referencedColumnNames="id"
                                  referencedTableName="countries"/>
@@ -67,14 +67,14 @@
                                  baseTableName="customers"
                                  constraintName="fk_state_province_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="states_provinces"/>
+                                 referencedTableName="state_provinces"/>
 
         <loadData file="db/data/countries.csv" tableName="countries" usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="abbreviation" type="string"/>
             <column name="name" type="string"/>
         </loadData>
-        <loadData file="db/data/states-provinces.csv" tableName="states_provinces" usePreparedStatements="true">
+        <loadData file="db/data/state-provinces.csv" tableName="state_provinces" usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="abbreviation" type="string"/>
             <column name="name" type="string"/>

@@ -22,13 +22,13 @@ public class CountryController {
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public Country getCountry(@PathVariable Integer id) {
-        return countryService.getCountry(id);
+    public Country get(@PathVariable Integer id) {
+        return countryService.get(id);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public List<Country> listAllCountries() {
-        return countryService.listAllCountries();
+    public List<Country> findAll() {
+        return countryService.findAll();
     }
 }

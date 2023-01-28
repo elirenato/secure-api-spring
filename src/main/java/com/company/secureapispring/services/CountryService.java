@@ -4,7 +4,6 @@ import com.company.secureapispring.entities.Country;
 import com.company.secureapispring.repositories.CountryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +18,11 @@ public class CountryService {
         this.countryRepository = countryRepository;
     }
 
-    public Country getCountry(Integer id) {
+    public Country get(Integer id) {
         return countryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public List<Country> listAllCountries() {
+    public List<Country> findAll() {
         return countryRepository.findAll(Sort.by("name"));
     }
 }
