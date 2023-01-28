@@ -13,8 +13,11 @@ import java.util.List;
 @Service
 @Transactional
 public class CountryService {
-    @Autowired
-    private CountryRepository countryRepository;
+    private final CountryRepository countryRepository;
+
+    public CountryService(CountryRepository countryRepository) {
+        this.countryRepository = countryRepository;
+    }
 
     public Country getCountry(Integer id) {
         return countryRepository.findById(id).orElseThrow(EntityNotFoundException::new);

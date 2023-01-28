@@ -14,8 +14,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/countries")
 public class CountryController {
-    @Autowired
-    private CountryService countryService;
+    private final CountryService countryService;
+
+    public CountryController(CountryService countryService) {
+        this.countryService = countryService;
+    }
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
