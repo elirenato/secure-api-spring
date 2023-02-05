@@ -30,17 +30,23 @@ The tests use the Testcontainers to start a PostgreSQL container, so, you can ju
 
 `./mvnw test`
 
+## Generate coverage test report 
+
+`./mvnw jacoco:report`
+
+and see `target/site/jacoco/index.html`
+
 ## Before run the application in dev mode
 
 ### Keycloak (20.0.1) and PostgreSQL (15.1)
 
 This application depend on these services, so, you must have them running.
 
-For dev purpose, you can use the bash script `./start-dev-env.sh` to start Docker containers with these services.
+For dev purpose, you can use the bash script `./dependencies.sh up` to start Docker containers with these services.
 
 The Keycloak will be available at `http://localhost:8080`.
 
-To stop the containers you can use the script `./stop-dev-env.sh`.
+To stop the containers you can use the script `./dependencies.sh down`.
 
 ### Keycloak Realm
 

@@ -3,9 +3,7 @@ package com.company.secureapispring.controllers;
 
 import com.company.secureapispring.entities.Country;
 import com.company.secureapispring.entities.StateProvince;
-import com.company.secureapispring.factory.Factory;
-import com.company.secureapispring.repositories.CountryRepository;
-import com.company.secureapispring.repositories.StateProvinceRepository;
+import com.company.secureapispring.factory.EntityFactory;
 import com.company.secureapispring.utils.TestJWTUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,27 +23,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class StateProvinceControllerIT extends AbstractIT {
 
-    private static String STATE_PROVINCES_ENDPOINT = "/api/state-provinces";
+    private static String ENDPOINT = "/api/state-provinces";
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private CountryRepository countryRepository;
-
-    @Autowired
-    private StateProvinceRepository stateProvinceRepository;
-
     @Test
     public void testGetWhenAuthenticated() throws Exception {
-        Country country = Factory
+        Country country = EntityFactory
                 .country()
-                .build(countryRepository::saveAndFlush);
-        StateProvince expected = Factory
+                .build(this.emTest);
+        StateProvince expected = EntityFactory
                 .stateProvince()
                 .with(StateProvince::setCountry, country)
-                .build(stateProvinceRepository::saveAndFlush);
-        mockMvc.perform(get(StateProvinceControllerIT.STATE_PROVINCES_ENDPOINT + "/" + expected.getId())
+                .build(this.emTest);
+        mockMvc.perform(get(StateProvinceControllerIT.ENDPOINT + "/" + expected.getId())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestJWTUtils.encode("any")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(expected.getId())))
@@ -56,35 +48,35 @@ public class StateProvinceControllerIT extends AbstractIT {
 
     @Test
     public void testGetWithoutAuthenticationThenFail() throws Exception {
-        Integer id = Factory.getFaker().number().randomDigitNotZero();
-        mockMvc.perform(get(StateProvinceControllerIT.STATE_PROVINCES_ENDPOINT + "/" + id))
+        Integer id = EntityFactory.getFaker().number().randomDigitNotZero();
+        mockMvc.perform(get(StateProvinceControllerIT.ENDPOINT + "/" + id))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void testGetWhenAuthenticatedAndNotFoundThenFail() throws Exception {
-        Integer id = Factory.getFaker().number().randomDigitNotZero();
-        mockMvc.perform(get(StateProvinceControllerIT.STATE_PROVINCES_ENDPOINT + "/" + id)
+        Integer id = EntityFactory.getFaker().number().randomDigitNotZero();
+        mockMvc.perform(get(StateProvinceControllerIT.ENDPOINT + "/" + id)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestJWTUtils.encode("any")))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void testFindAllWhenAuthenticated() throws Exception {
-        Country country = Factory
+        Country country = EntityFactory
                 .country()
-                .build(countryRepository::saveAndFlush);
+                .build(this.emTest);
         List<StateProvince> expectedCountries =  IntStream
-                .range(1, Factory.getFaker().number().numberBetween(2, 5))
-                .mapToObj(n -> Factory
+                .range(1, EntityFactory.getFaker().number().numberBetween(2, 5))
+                .mapToObj(n -> EntityFactory
                         .stateProvince()
                         .with(StateProvince::setCountry, country)
-                        .build(stateProvinceRepository::saveAndFlush)
+                        .build(this.emTest)
                 )
                 .sorted(Comparator.comparing(StateProvince::getName))
                 .collect(Collectors.toList());
         int lastIndex = expectedCountries.size()-1;
-        mockMvc.perform(get(StateProvinceControllerIT.STATE_PROVINCES_ENDPOINT)
+        mockMvc.perform(get(StateProvinceControllerIT.ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestJWTUtils.encode("any")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(expectedCountries.size())))
@@ -103,7 +95,7 @@ public class StateProvinceControllerIT extends AbstractIT {
     @Test
     public void testListCountriesWithoutAuthentication() throws Exception {
         this.mockMvc.perform(
-                        get(StateProvinceControllerIT.STATE_PROVINCES_ENDPOINT)
+                        get(StateProvinceControllerIT.ENDPOINT)
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized());

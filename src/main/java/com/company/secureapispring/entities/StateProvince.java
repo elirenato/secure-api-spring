@@ -1,16 +1,12 @@
 package com.company.secureapispring.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Entity(name = "state_provinces")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class StateProvince {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

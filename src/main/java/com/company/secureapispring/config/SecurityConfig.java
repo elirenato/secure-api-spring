@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @EnableMethodSecurity
-public class KeycloakSecurityConfig {
+public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
