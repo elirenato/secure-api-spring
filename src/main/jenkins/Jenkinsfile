@@ -4,7 +4,7 @@ pipeline {
       disableConcurrentBuilds()
     }
     agent {
-        docker {
+        dockerfile {
             filename 'Dockerfile'
             dir 'jenkins'
             args """
