@@ -19,12 +19,12 @@ pipeline {
             steps {
                 sh './mvnw clean test'
             }
-//             post {
-//                 always {
-//                     junit 'target/surefire-reports/*.xml'
-//                     step( [ $class: 'JacocoPublisher' ] )
-//                 }
-//             }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                    step( [ $class: 'JacocoPublisher' ] )
+                }
+            }
         }
         stage('Build') {
             steps {
