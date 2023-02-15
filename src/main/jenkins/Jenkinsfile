@@ -4,6 +4,7 @@ pipeline {
       disableConcurrentBuilds()
     }
     agent {
+        // Must have Docker Pipeline and Docker Commons Plugin Installed
         dockerfile {
             filename 'Dockerfile'
             dir 'src/main/jenkins'
@@ -19,6 +20,7 @@ pipeline {
             steps {
                 sh './mvnw clean test'
             }
+            // Must have JaCoCo plugin installed
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
@@ -30,13 +32,14 @@ pipeline {
             steps {
                 sh """
                     ./mvnw -DskipTests package
+                    echo "TODO Build image and push to registry"
                 """
             }
         }
         stage('Deploy') {
             steps {
                 sh """
-                    echo "TODO"
+                    echo "TODO Deploy on self hosted"
                 """
             }
         }
