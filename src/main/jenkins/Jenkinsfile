@@ -1,0 +1,44 @@
+pipeline {
+    options {
+      timeout(time: 10, unit: 'MINUTES')
+      disableConcurrentBuilds()
+    }
+    agent {
+        docker {
+            filename 'Dockerfile'
+            dir 'jenkins'
+            args """
+                -u root:root
+                -v /root/.m2:/root/.m2
+                -v /var/run/docker.sock:/var/run/docker.sock
+            """
+        }
+    }
+    stages {
+        stage('Test') {
+            steps {
+                sh './mvnw clean test'
+            }
+//             post {
+//                 always {
+//                     junit 'target/surefire-reports/*.xml'
+//                     step( [ $class: 'JacocoPublisher' ] )
+//                 }
+//             }
+        }
+        stage('Build') {
+            steps {
+                sh """
+                    ./mvnw -DskipTests package
+                """
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh """
+                    echo "TODO"
+                """
+            }
+        }
+    }
+}

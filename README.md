@@ -11,18 +11,17 @@ It was bootstrapped using [Spring Initializer](https://start.spring.io/) with th
 - Liquibase (With PostgreSQL as the database).
 - [TestContainers](https://www.testcontainers.org/) to run tests in an isolated PostgresSQL database.
 - [Java Faker](http://github.com/DiUS/java-faker) to generate test data.
-- [Lombok](https://projectlombok.org/) to keep the code clean.
-- (In progress) Container Image Jib to build the image that will be pulled by Kubernetes.
-- (In progress) Kubernetes, to generate the resources needed to deploy on Kubernetes.
+- [Lombok](https://projectlombok.org/) to be less verbose in this example.
 
 ## Directory Structure
 
 This project follows the default Java structure `/src/main`.
 
-- `/src/docs` - Quick reference of how to create a realm with Keycloak version 20.
+- `/src/docs` - A quick reference of how to create a realm with Keycloak version 20 and a Postman collection with sample requests to the endpoints of this project.
 - `/src/main/java` - The Java code.
 - `/src/main/test` - The Java test code.
 - `/src/main/docker/dev-env`: The Docker files to build and run the Postgres and Keycloak containers required for this project.
+- `/src/main/jenkins`: - Jenkins file and resources that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
 
 ## Running tests
 
