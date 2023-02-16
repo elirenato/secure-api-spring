@@ -68,6 +68,13 @@ The application can be packaged using:
 ./mvnw package
 ```
 
+## Debug image generated for build by Jenkins
+
+```bash
+export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/jenkins/Dockerfile . --no-cache
+```
+
+
 ## Debug image generated for deployment
 
 If you would like to debug the image generated for deployment, here are the steps:
