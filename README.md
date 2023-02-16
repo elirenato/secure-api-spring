@@ -70,10 +70,22 @@ The application can be packaged using:
 
 ## Debug image generated for build by Jenkins
 
+- Build the image:
 ```bash
-export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/jenkins/Dockerfile . --no-cache
+export DOCKER_BUILDKIT=1 && docker build -t jenkins_java17 -f ./src/main/jenkins/Dockerfile . --no-cache
 ```
-
+- Run the image as container:
+```bash
+docker run --name jenkins_java17 -v /root/.m2:/root/.m2 -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/var/lib/secure-api-spring -w /var/lib/secure-api-spring -d jenkins_java17 sleep infinity
+```
+- Enter inside the container using the image ID returned by the previous command:
+```bash
+docker exec -it <Image ID> /bin/sh
+```
+- Execute a maven command:
+```bash
+./mvnw clean test
+```
 
 ## Debug image generated for deployment
 
