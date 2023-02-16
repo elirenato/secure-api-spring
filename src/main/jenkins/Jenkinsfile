@@ -13,6 +13,9 @@ pipeline {
                 -u root:root
                 -v /root/.m2:/root/.m2
                 -v /var/run/docker.sock:/var/run/docker.sock
+                -e REGISTRY_HOST=$REGISTRY_HOST
+                -e REGISTRY_USERNAME=$REGISTRY_USERNAME
+                -e REGISTRY_PASSWORD=$REGISTRY_PASSWORD
             """
         }
     }
@@ -34,6 +37,8 @@ pipeline {
                 sh """
                     ./mvnw -DskipTests package
                     export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/docker/deploy/Dockerfile . --no-cache
+                    docker login ${REGISTRY_HOST} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
+                    docker tag secure-api-spring:latest ${REGISTRY_HOST}/secure-api-spring:latest
                 """
             }
         }
