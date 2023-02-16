@@ -46,7 +46,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """
-                    echo "TODO Deploy on self hosted"
+                    echo "TODO Deploy on self hosted server"
                 """
             }
         }
