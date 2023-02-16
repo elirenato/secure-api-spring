@@ -20,7 +20,8 @@ This project follows the default Java structure `/src/main`.
 - `/src/docs` - A quick reference of how to create a realm with Keycloak version 20 and a Postman collection with sample requests to the endpoints of this project.
 - `/src/main/java` - The Java code.
 - `/src/main/test` - The Java test code.
-- `/src/main/docker/dev-env`: The Docker files to build and run the Postgres and Keycloak containers required for this project.
+- `/src/main/docker/develop`: The Docker files to build and run the Postgres and Keycloak containers required for test and development.
+- `/src/main/docker/deploy`: The Dockerfile to build the image in the build process that will be used for deployment.
 - `/src/main/jenkins`: - Jenkins file and resources that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
 
 ## Running tests
@@ -67,6 +68,30 @@ The application can be packaged using:
 ./mvnw package
 ```
 
+## Debug image generated for deployment
+
+If you would like to debug the image generated for deployment, here are the steps:
+
+- Start the dependencies. See `Before run the application in dev mode above` section above. 
+- Build the image:
+```bash
+export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/docker/deploy/Dockerfile . --no-cache
+```
+- Run the image as container:
+```bash
+docker run --name secure-api-spring -p 8081:8081 --add-host=host.docker.internal:host-gateway  --env DATASOURCE_JDBC_URL=jdbc:postgresql://host.docker.internal:5432/app_dev --env OIDC_AUTH_SERVER_URL=http://host.docker.internal:8080/realms/app --env LOG_LEVEL=DEBUG -d secure-api-spring sleep infinity
+```
+- Enter inside the container using the image ID returned by the previous command:
+```bash
+docker exec -it <Image ID> /bin/sh
+```
+- Execute the jar file
+```bash
+java -jar /secure-api-spring-0.0.1-SNAPSHOT.jar
+```
+
+PS: Starting the project from a container like this, the OIDC_AUTH_SERVER_URL environment was changed to access Keycloak of the Host machine. The JWT token generated should also use the same URL to avoid the error `The iss claim is not valid`.
+
 ## Deploying application to Kubernetes
 
 The application is deployed to Kubernetes using Jenkins:
@@ -76,17 +101,3 @@ The application is deployed to Kubernetes using Jenkins:
 3. The last stage, uses the Kubernetes resources generated to deploy the application.
 
 See the [Jenkinsfile](./src/main/jenkins/Jenkinsfile) for more details:
-
-PS: The Jenkins agent to build this project is Docker. The image created for Jenkins agent, uses a GraalVM JDK,
-as I intend to do some tests building a native executable in the future.
-
-## Creating a native executable
-
-**PS: NOT TESTED YET**
-
-You can create a native executable using:
-```shell script
-./mvnw package -Pnative
-```
-
-You can then execute your native executable with: `./target/secure-api-spring-1.0.0-SNAPSHOT-runner`

@@ -5,6 +5,7 @@ pipeline {
     }
     agent {
         // Must have Docker Pipeline and Docker Commons Plugin Installed
+        // The image name could be used but with the Dockerfile it's possible customize the image if needed
         dockerfile {
             filename 'Dockerfile'
             dir 'src/main/jenkins'
@@ -32,7 +33,7 @@ pipeline {
             steps {
                 sh """
                     ./mvnw -DskipTests package
-                    echo "TODO Build image and push to registry"
+                    export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/docker/deploy/Dockerfile . --no-cache
                 """
             }
         }
