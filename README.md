@@ -12,6 +12,7 @@ It was bootstrapped using [Spring Initializer](https://start.spring.io/) with th
 - [TestContainers](https://www.testcontainers.org/) to run tests in an isolated PostgresSQL database.
 - [Java Faker](http://github.com/DiUS/java-faker) to generate test data.
 - [Lombok](https://projectlombok.org/) to be less verbose in this example.
+- Deploy with Jenkins to a self-hosted server with Kubernetes (EC2 or other).
 
 ## Directory Structure
 
