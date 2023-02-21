@@ -45,8 +45,9 @@ pipeline {
         }
         stage('Deploy to K8s') {
             steps {
+                // SSH Agent Plugin
                 sshagent (credentials: ['k8s'])  {
-                    sh 'scp -o StrictHostKeyChecking=no -r -v -P ${K8S_SERVER_PORT} ./target/kubernetes.yaml ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST}:/tmp/kubernetes.yaml'
+                    sh 'scp -o StrictHostKeyChecking=no -r -v -P ${K8S_SERVER_PORT} ./target/kubernetes/kubernetes.yaml ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST}:/tmp/kubernetes.yaml'
                     sh 'ssh -o StrictHostKeyChecking=no -p ${K8S_SERVER_PORT} ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST} \"kubectl apply -f /tmp/kubernetes.yaml\"'
                 }
             }
