@@ -35,7 +35,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
-                    ./mvnw -DskipTests package
+                    ./mvnw -DskipTests package -DregistryHost=${REGISTRY_HOST} -DspringAppPort=${SPRING_APP_PORT}
                     export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/docker/deploy/Dockerfile . --no-cache
                     docker login ${REGISTRY_HOST} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
                     docker tag secure-api-spring:latest ${REGISTRY_HOST}/secure-api-spring:latest
@@ -43,11 +43,12 @@ pipeline {
                 """
             }
         }
-        stage('Deploy') {
+        stage('Deploy to K8s') {
             steps {
-                sh """
-                    echo "TODO Deploy on self hosted server"
-                """
+                sshagent (credentials: ['k8s'])  {
+                    sh 'scp -o StrictHostKeyChecking=no -r -v -P ${K8S_SERVER_PORT} ./target/kubernetes.yaml ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST}:/tmp/kubernetes.yaml'
+                    sh 'ssh -o StrictHostKeyChecking=no -p ${K8S_SERVER_PORT} ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST} \"kubectl apply -f /tmp/kubernetes.yaml\"'
+                }
             }
         }
     }
