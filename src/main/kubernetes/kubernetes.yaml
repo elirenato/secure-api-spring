@@ -26,7 +26,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: secure-api-spring-cfg-map
-          image: ${registryHost}/secure-api-spring:0.0.1-SNAPSHOT
+          image: ${registryTag}/secure-api-spring:latest
           imagePullPolicy: Always
           name: secure-api-spring
           ports:

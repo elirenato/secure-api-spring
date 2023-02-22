@@ -35,11 +35,11 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
-                    ./mvnw -DskipTests package -DregistryHost=${REGISTRY_HOST} -DspringAppPort=${SPRING_APP_PORT}
-                    export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/docker/deploy/Dockerfile . --no-cache
+                    ./mvnw -DskipTests package -DregistryTag=${REGISTRY_TAG} -DspringAppPort=${SPRING_APP_PORT}
+                    export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/docker/deploy/Dockerfile .
                     docker login ${REGISTRY_HOST} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
-                    docker tag secure-api-spring:latest ${REGISTRY_HOST}/secure-api-spring:latest
-                    docker push ${REGISTRY_HOST}/secure-api-spring:latest
+                    docker tag secure-api-spring:latest ${REGISTRY_TAG}/secure-api-spring:latest
+                    docker push ${REGISTRY_TAG}/secure-api-spring:latest
                 """
             }
         }
