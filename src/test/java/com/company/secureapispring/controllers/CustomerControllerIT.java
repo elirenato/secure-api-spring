@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CustomerControllerIT extends AbstractIT {
 
-    private static String ENDPOINT = "/api/customers";
+    private static String ENDPOINT = "/customers";
 
     @Autowired
     protected ObjectMapper objectMapper;

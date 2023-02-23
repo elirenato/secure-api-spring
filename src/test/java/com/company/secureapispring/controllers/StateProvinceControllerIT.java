@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class StateProvinceControllerIT extends AbstractIT {
 
-    private static String ENDPOINT = "/api/state-provinces";
+    private static String ENDPOINT = "/state-provinces";
 
     @Autowired
     private MockMvc mockMvc;
