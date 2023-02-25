@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CountryControllerIT extends AbstractIT {
 
-    private static String ENDPOINT = "/api/countries";
+    private static String ENDPOINT = "/countries";
 
     @Autowired
     private MockMvc mockMvc;

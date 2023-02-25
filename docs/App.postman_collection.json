@@ -24,7 +24,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/api/countries",
+							"raw": "{{apiUrl}}/countries",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -51,7 +51,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/api/countries/1",
+							"raw": "{{apiUrl}}/countries/1",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -76,7 +76,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/api/state-provinces?country=1",
+							"raw": "{{apiUrl}}/state-provinces?country=1",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -125,7 +125,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUrl}}/api/customers",
+							"raw": "{{apiUrl}}/customers",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -163,7 +163,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUrl}}/api/customers/1000000",
+							"raw": "{{apiUrl}}/customers/1000000",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -188,7 +188,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/api/customers",
+							"raw": "{{apiUrl}}/customers",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -217,7 +217,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/api/customers/1111x",
+							"raw": "{{apiUrl}}/customers/1111x",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -242,7 +242,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/api/customers/4",
+							"raw": "{{apiUrl}}/customers/4",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -358,7 +358,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/api/countries",
+							"raw": "{{apiUrl}}/countries",
 							"host": [
 								"{{apiUrl}}"
 							],
