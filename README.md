@@ -22,7 +22,6 @@ This project follows the default Java structure `/src/main`.
 - `/src/main/java` - The Java code.
 - `/src/main/test` - The Java test code.
 - `/src/main/docker/develop`: The Docker files to build and run the Postgres and Keycloak containers required for test and development.
-- `/src/main/docker/deploy`: The Dockerfile to build the image in the build process that will be used for deployment.
 - `/src/main/jenkins`: - Jenkins file and resources that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
 
 ## Running tests
@@ -95,11 +94,11 @@ If you would like to debug the image generated for deployment, here are the step
 - Start the dependencies. See `Before run the application in dev mode above` section above. 
 - Build the image:
 ```bash
-export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/docker/deploy/Dockerfile . --no-cache
+export DOCKER_BUILDKIT=1 && /mvnw spring-boot:build-image 
 ```
 - Run the image as container:
 ```bash
-docker run --name secure-api-spring -p 8081:8081 --add-host=host.docker.internal:host-gateway  --env DATASOURCE_JDBC_URL=jdbc:postgresql://host.docker.internal:5432/app_dev --env OIDC_AUTH_SERVER_URL=http://host.docker.internal:8080/realms/app --env LOG_LEVEL=DEBUG -d secure-api-spring sleep infinity
+docker run --name secure-api-spring -p 8081:8081 --add-host=host.docker.internal:host-gateway  --env DATASOURCE_JDBC_URL=jdbc:postgresql://host.docker.internal:5432/app_dev --env OIDC_AUTH_SERVER_URL=http://host.docker.internal:8080/realms/app --env LOG_LEVEL=DEBUG -d secure-api-spring:0.0.1-SNAPSHOT sleep infinity
 ```
 - Enter inside the container using the image ID returned by the previous command:
 ```bash
@@ -112,12 +111,40 @@ java -jar /secure-api-spring-0.0.1-SNAPSHOT.jar
 
 PS: Starting the project from a container like this, the OIDC_AUTH_SERVER_URL environment was changed to access Keycloak of the Host machine. The JWT token generated should also use the same URL to avoid the error `The iss claim is not valid`.
 
-## Deploying application to Kubernetes
+## Deploying application to Kubernetes using Jenkins
 
-The application is deployed to Kubernetes using Jenkins:
+Create a `New Item` of the type `Pipeline` inside Jenkins.
 
-1. The first stage, run the tests with coverage report.
-2. The second stage, package the application, build an image and push the image to a private Docker Registry repository.
-3. The last stage, uses the Kubernetes resources generated to deploy the application.
+- Use the URL of the Git repository as the Pipeline Repository URL.
+- Set the `Branches to bulid` with the name of the branches. E.g. `*/main`.
+- Set the `Script path` with `src/main/jenkins/Jenkinsfile`.
 
-See the [Jenkinsfile](./src/main/jenkins/Jenkinsfile) for more details:
+The `Jenkinsfile` is composed by the following stages:
+
+- Test: Run the tests with coverage report.
+- Build: Build the image and push to the registry repository.
+- Deploy: Deploy the image to the Kubernetes.
+
+PS: For subsequent builds, increase the version number inside all files with the current version (e.g. search by 0.0.1-SNAPSHOT and replace it by the next version in all files found).
+
+### Jenkins required plugins
+
+- Docker Pipeline.
+- Docker Commons.
+- JaCoCo.
+- SSH Agent.
+
+### Jenkins required environment variables (Manage Jenkins -> Configure System -> Global Properties)
+
+- K8S_SERVER_HOST: Host of the server with the Kubernetes.
+- K8S_SERVER_PORT: SSH of the server with the Kubernetes.
+- K8S_SERVER_USERNAME: Username to access the server with the Kubernetes.
+- REGISTRY_HOST: Private image registry. Leave empty to use the public Docker Hub registry.
+- REGISTRY_USERNAME: Registry Username.
+- REGISTRY_PASSWORD: Registry Password.
+- REGISTRY_TAG: Registry Image Tag prefix. Use the Username for the public Docker Hub registry.
+- SPRING_APP_PORT: Same server port used inside the application.properties.
+
+PS: The server with the Kubernetes must have authentication with SSH key pairs. Add the private key inside (Manage Jenkins -> Credentials -> System -> Global credentials).
+
+See the [Jenkinsfile](./src/main/jenkins/Jenkinsfile) for more details.

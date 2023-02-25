@@ -36,16 +36,16 @@ pipeline {
             steps {
                 sh """
                     ./mvnw -DskipTests package -DregistryTag=${REGISTRY_TAG} -DspringAppPort=${SPRING_APP_PORT}
-                    export DOCKER_BUILDKIT=1 && docker build -t secure-api-spring:latest -f ./src/main/docker/deploy/Dockerfile .
+                    export DOCKER_BUILDKIT=1 && ./mvnw spring-boot:build-image
                     docker login ${REGISTRY_HOST} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
-                    docker tag secure-api-spring:latest ${REGISTRY_TAG}/secure-api-spring:latest
-                    docker push ${REGISTRY_TAG}/secure-api-spring:latest
+                    docker tag secure-api-spring:0.0.1-SNAPSHOT ${REGISTRY_TAG}/secure-api-spring:0.0.1-SNAPSHOT
+                    docker push ${REGISTRY_TAG}/secure-api-spring:0.0.1-SNAPSHOT
                 """
             }
         }
-        stage('Deploy to K8s') {
+        stage('Deploy') {
             steps {
-                // SSH Agent Plugin
+                // Must have SSH Agent Plugin installed
                 sshagent (credentials: ['k8s'])  {
                     sh 'scp -o StrictHostKeyChecking=no -r -v -P ${K8S_SERVER_PORT} ./target/kubernetes/kubernetes.yaml ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST}:/tmp/kubernetes.yaml'
                     sh 'ssh -o StrictHostKeyChecking=no -p ${K8S_SERVER_PORT} ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST} \"microk8s kubectl apply -f /tmp/kubernetes.yaml\"'
