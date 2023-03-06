@@ -1,6 +1,6 @@
-# Secure API with Spring Boot 3
+# Secure API Spring (Application)
 
-This repository is an example Java REST API application that was configured to use [Keycloak](https://www.keycloak.org) as access management.
+The purpose of this module is to hold the core code for the Java REST API example application that was configured to use [Keycloak](https://www.keycloak.org) as access management.
 
 It was bootstrapped using [Spring Initializer](https://start.spring.io/) with the following dependencies:
 
@@ -17,17 +17,16 @@ It was bootstrapped using [Spring Initializer](https://start.spring.io/) with th
 
 ## Directory Structure
 
-The directory structure of this repository follows the [Multi Module Project for Spring Boot](https://spring.io/guides/gs/multi-module/).
+The directory structure follow the [Maven Standard Directory Layout](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html).
+- `src/main/java`: Java code.
+- `src/main/resources`: Library resources.
+- `src/test/java`: Java test code.
+- `src/test/resources`: Library test resources.
 
-- `common` is a Spring Boot Library module with shared code between different services.
-  - `src/main`: The Java code.
-  - `src/test`: The Java test code.
-- `core` is Spring Boot API module with core code for this project. 
-  - `src/main`: The Java code.
-  - `src/test`: The Java test code.
-  - `src/main/jenkins`: The Jenkins and Docker file that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
-  - `src/main/kubernetes`: A Kubernetes deployment and service configuration to deploy this project in a Kubernetes.
-  - `docs`: A Postman collection with sample requests to the endpoints of this project.
+It also contains some extra directories:
+- `src/main/jenkins`: The Jenkins and Docker file that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
+- `src/main/kubernetes`: A Kubernetes deployment and service configuration to deploy this project in a Kubernetes.
+- `docs`: A Postman collection with sample requests to the endpoints of this project.
 
 In case you need another library or service (API or Webapp) that will be deployed as a different application, you can change the `pom.xml` of the root directory to include new modules and keep the code organized.
 
