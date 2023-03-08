@@ -27,7 +27,7 @@ pipeline {
             // Must have JaCoCo plugin installed
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml'
+                    junit 'customer-service/target/surefire-reports/*.xml'
                     step( [ $class: 'JacocoPublisher' ] )
                 }
             }
@@ -46,7 +46,7 @@ pipeline {
             steps {
                 // Must have SSH Agent Plugin installed
                 sshagent (credentials: ['k8s'])  {
-                    sh 'scp -o StrictHostKeyChecking=no -r -v -P ${K8S_SERVER_PORT} ./target/kubernetes/kubernetes.yaml ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST}:/tmp/kubernetes.yaml'
+                    sh 'scp -o StrictHostKeyChecking=no -r -v -P ${K8S_SERVER_PORT} ./customer-service/target/kubernetes/kubernetes.yaml ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST}:/tmp/kubernetes.yaml'
                     sh 'ssh -o StrictHostKeyChecking=no -p ${K8S_SERVER_PORT} ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST} \"microk8s kubectl apply -f /tmp/kubernetes.yaml\"'
                 }
             }
