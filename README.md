@@ -16,9 +16,9 @@ It was bootstrapped using [Spring Initializer](https://start.spring.io/) with th
 - Deploy with Jenkins to a self-hosted server with Kubernetes (EC2 or other).
 
 
-## Git Monorepos
+## Git Monorepo
 
-This repository follow the `Git Monorepo` approach where different services are versioned inside the same repository.
+Definition of Monorepos "The repository contains more than one logical project ". See [Git Monorepos](https://www.atlassian.com/git/tutorials/monorepos).
 
 ## Directory Structure
 
