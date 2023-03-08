@@ -89,7 +89,7 @@ Create a `New Item` of the type `Pipeline` inside Jenkins.
 
 - Use the URL of the Git repository as the Pipeline Repository URL.
 - Set the `Branches to bulid` with the name of the branches. E.g. `*/main`.
-- Set the `Script path` with `customer/src/main/jenkins/Jenkinsfile`.
+- Set the `Script path` with `customer-service/src/main/jenkins/Jenkinsfile`.
 
 The `Jenkinsfile` is composed by the following stages:
 
