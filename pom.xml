@@ -7,11 +7,11 @@
     <artifactId>secure-api-spring-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Secure API Spring (Parent)</name>
+    <name>Secure API Spring - Parent</name>
 
     <modules>
-        <module>common</module>
-        <module>core</module>
+        <module>common-library</module>
+        <module>customer-service</module>
     </modules>
 
 </project>

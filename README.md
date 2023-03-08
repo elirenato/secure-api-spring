@@ -15,15 +15,20 @@ It was bootstrapped using [Spring Initializer](https://start.spring.io/) with th
 - [Lombok](https://projectlombok.org/) to be less verbose in this example.
 - Deploy with Jenkins to a self-hosted server with Kubernetes (EC2 or other).
 
-## Directory structure
+
+## Git Monorepos
+
+This repository follow the `Git Monorepo` approach where different services are versioned inside the same repository.
+
+## Directory Structure
 
 Some directories are structured like a [Multi Module Project for Spring Boot](https://spring.io/guides/gs/multi-module/):
-- [core](./core/README.md) is the main application module of this repository, and it was bootstrapped with the dependencies mentioned above.
-- [common](./common/README.md) is a library module, it was created with the purpose to share code between different services.
+- [Customer Service](./customer-service/README.md) is the main application module of this repository, and it was bootstrapped with the dependencies mentioned above.
+- [Common Library](./common-library/README.md) is a library module, it was created with the purpose to share code between different services.
 
 Other non-module directories:
 - [keycloak](./keycloak/README.md) was created to store container images to run Keycloak and PostgreSQL.
 
-## Running tests for all modules
+## Running Tests for All Modules
 
 `./mvnw test`
