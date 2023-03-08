@@ -11,7 +11,7 @@
     <groupId>com.company.secureapispring</groupId>
     <artifactId>core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Secure Api Spring (Core)</name>
+    <name>Secure API Spring (Core)</name>
     <properties>
         <java.version>17</java.version>
         <testcontainers.version>1.17.6</testcontainers.version>

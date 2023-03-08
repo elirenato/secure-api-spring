@@ -1,21 +1,6 @@
 # Secure API Spring (Application)
 
-The purpose of this module is to hold the core code for the Java REST API example application that was configured to use [Keycloak](https://www.keycloak.org) as access management.
-
-It was bootstrapped using [Spring Initializer](https://start.spring.io/) with the following dependencies:
-
-- RESTful classic (spring-boot-starter-web).
-- JUnit Jupiter, Hamcrest and Mockito (spring-boot-starter-test).
-- OIDC to enable the integration with Keycloak (spring-boot-starter-oauth2-resource-server).
-- Jacoco to generate the coverage test report.
-- Spring Data and Hibernate Validator.
-- Liquibase (With PostgreSQL as the database).
-- [TestContainers](https://www.testcontainers.org/) to run tests in an isolated PostgresSQL database.
-- [Java Faker](http://github.com/DiUS/java-faker) to generate test data.
-- [Lombok](https://projectlombok.org/) to be less verbose in this example.
-- Deploy with Jenkins to a self-hosted server with Kubernetes (EC2 or other).
-
-## Directory Structure
+## Directory structure
 
 The directory structure follow the [Maven Standard Directory Layout](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html).
 - `src/main/java`: Java code.
@@ -23,16 +8,10 @@ The directory structure follow the [Maven Standard Directory Layout](https://mav
 - `src/test/java`: Java test code.
 - `src/test/resources`: Library test resources.
 
-It also contains some extra directories:
+Other directories:
 - `src/main/jenkins`: The Jenkins and Docker file that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
 - `src/main/kubernetes`: A Kubernetes deployment and service configuration to deploy this project in a Kubernetes.
 - `docs`: A Postman collection with sample requests to the endpoints of this project.
-
-In case you need another library or service (API or Webapp) that will be deployed as a different application, you can change the `pom.xml` of the root directory to include new modules and keep the code organized.
-
-There is another directory called `keycloak` inside the root directory. It's not a maven project, it contains:
-- `src/docker`: Docker and Docker Compose files to build and run the Postgres and Keycloak containers required for test and development.
-- `src/docs`: A quick reference of how to create a realm with Keycloak version 20 and a Postman collection with sample requests to the endpoints of this project.
 
 ## Running tests
 
@@ -46,31 +25,13 @@ The tests use the Testcontainers to start a PostgreSQL container, so, you can ju
 
 and see `target/site/jacoco/index.html`
 
+### Run the application in dev mode
 
-## Before run the application in com mode
-
-### Keycloak (20.0.1) and PostgreSQL (15.1)
-
-This application depend on these services, so, you must have them running.
-
-For com purpose, you can use the bash script `./keycloak.sh up` to start Docker containers with these services.
-
-The Keycloak will be available at `http://localhost:8080`.
-
-To stop the containers you can use the script `./keycloak.sh down`.
-
-### Keycloak Realm
-
-To complete the setup of Keycloak, you also need to configure a Realm to test the application.
-
-[Configure a new realm](./docs/create-new-realm-keycloak-20.pdf).
-
-### Run the application in com mode
-
-Finally, it's possible to run the application:
 ```bash
 ./mvnw spring-boot:run
 ```
+
+PS: Read first the [Keycloak](../keycloak/README.md) before run the application.
 
 ## Packaging and running the application
 
