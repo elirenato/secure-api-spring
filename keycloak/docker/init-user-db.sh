@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# app database for com
+# app database for dev
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" -c "
     CREATE ROLE ${APP_DB_USERNAME}
     WITH NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT LOGIN NOREPLICATION NOBYPASSRLS

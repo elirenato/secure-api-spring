@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-  apt-get install wget build-essential libz-com -y
+  apt-get install wget build-essential libz-dev -y
 RUN cd /opt && \
     wget "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.1.0/graalvm-ce-java17-linux-amd64-22.1.0.tar.gz" && \
     tar -xvf graalvm-ce-java17-linux-amd64-22.1.0.tar.gz && \
