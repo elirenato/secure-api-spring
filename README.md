@@ -23,11 +23,13 @@ Definition of Monorepos "The repository contains more than one logical project "
 ## Directory Structure
 
 Some directories are structured like a [Multi Module Project for Spring Boot](https://spring.io/guides/gs/multi-module/):
-- [Customer Service](./customer-service/README.md) is the main application module of this repository, and it was bootstrapped with the dependencies mentioned above.
-- [Common Library](./common-library/README.md) is a library module, it was created with the purpose to share code between different services.
+- [common-library](./common-library/README.md) is a library module, it was created with the purpose to share code between different services.
+- [customer-service](./customer-service/README.md) is the main application module of this repository, and it was bootstrapped with the dependencies mentioned above.
 
 Other non-module directories:
 - [keycloak](./keycloak/README.md) was created to store container images to run Keycloak and PostgreSQL.
+- [jenkins](./jenkins/README.md): The Jenkins and Docker file that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
+
 
 ## Running Tests for All Modules
 

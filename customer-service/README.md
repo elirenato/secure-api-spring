@@ -9,7 +9,6 @@ The directory structure follow the [Maven Standard Directory Layout](https://mav
 - `src/test/resources`: Library test resources.
 
 Other directories:
-- `src/main/jenkins`: The Jenkins and Docker file that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
 - `src/main/kubernetes`: A Kubernetes deployment and service configuration to deploy this project in a Kubernetes.
 - `docs`: A Postman collection with sample requests to the endpoints of this project.
 
@@ -40,25 +39,6 @@ The application can be packaged using:
 ./mvnw package
 ```
 
-## Debug image generated for build by Jenkins
-
-- Build the image:
-```bash
-export DOCKER_BUILDKIT=1 && docker build -t jenkins_java17 -f ./src/main/jenkins/Dockerfile . --no-cache
-```
-- Run the image as container:
-```bash
-docker run --name jenkins_java17 -v /root/.m2:/root/.m2 -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/var/lib/secure-api-spring -w /var/lib/secure-api-spring -d jenkins_java17 sleep infinity
-```
-- Enter inside the container using the image ID returned by the previous command:
-```bash
-docker exec -it <Image ID> /bin/sh
-```
-- Execute a maven command:
-```bash
-./mvnw clean test
-```
-
 ## Debug image generated for deployment
 
 If you would like to debug the image generated for deployment, here are the steps:
@@ -74,7 +54,7 @@ docker run --name secure-api-spring -p 8081:8081 --add-host=host.docker.internal
 ```
 - Enter inside the container using the image ID returned by the previous command:
 ```bash
-docker exec -it <Image ID> /bin/sh
+docker exec -it <Image ID> /bin/bash
 ```
 - Execute the jar file
 ```bash
@@ -89,7 +69,7 @@ Create a `New Item` of the type `Pipeline` inside Jenkins.
 
 - Use the URL of the Git repository as the Pipeline Repository URL.
 - Set the `Branches to bulid` with the name of the branches. E.g. `*/main`.
-- Set the `Script path` with `customer-service/src/main/jenkins/Jenkinsfile`.
+- Set the `Script path` with `jenkins/Jenkinsfile`.
 
 The `Jenkinsfile` is composed by the following stages:
 
@@ -99,7 +79,7 @@ The `Jenkinsfile` is composed by the following stages:
 
 PS: For subsequent builds, increase the version number inside all files with the current version (e.g. search by 0.0.1-SNAPSHOT and replace it by the next version in all files found).
 
-See the [Jenkinsfile](./src/main/jenkins/Jenkinsfile) for more details.
+See the [Jenkinsfile](../jenkins/Jenkinsfile) for more details.
 
 ### Jenkins required plugins
 
