@@ -28,7 +28,6 @@ Some directories are structured like a [Multi Module Project for Spring Boot](ht
 
 Other non-module directories:
 - [keycloak](./keycloak/README.md) was created to store container images to run Keycloak and PostgreSQL.
-- [jenkins](./jenkins/README.md): The Jenkins and Docker file that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
 
 
 ## Running Tests for All Modules

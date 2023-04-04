@@ -8,7 +8,7 @@ pipeline {
         // The image name could be used but with the Dockerfile it's possible customize the image if needed
         dockerfile {
             filename 'Dockerfile'
-            dir './jenkins'
+            dir './src/main/jenkins'
             args """
                 -u root:root
                 -v /root/.m2:/root/.m2

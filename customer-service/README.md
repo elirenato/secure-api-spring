@@ -9,6 +9,7 @@ The directory structure follow the [Maven Standard Directory Layout](https://mav
 - `src/test/resources`: Library test resources.
 
 Other directories:
+- `src/main/jenkins`: The Jenkins and Docker file that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
 - `src/main/kubernetes`: A Kubernetes deployment and service configuration to deploy this project in a Kubernetes.
 - `docs`: A Postman collection with sample requests to the endpoints of this project.
 
@@ -58,7 +59,7 @@ docker exec -it <Image ID> /bin/bash
 ```
 - Execute the jar file
 ```bash
-java -jar /secure-api-spring-0.0.1-SNAPSHOT.jar
+java -jar /customer-service-0.0.1-SNAPSHOT.jar
 ```
 
 PS: Starting the project from a container like this, the OIDC_AUTH_SERVER_URL environment was changed to access Keycloak of the Host machine. The JWT token generated should also use the same URL to avoid the error `The iss claim is not valid`.
@@ -69,7 +70,7 @@ Create a `New Item` of the type `Pipeline` inside Jenkins.
 
 - Use the URL of the Git repository as the Pipeline Repository URL.
 - Set the `Branches to bulid` with the name of the branches. E.g. `*/main`.
-- Set the `Script path` with `jenkins/Jenkinsfile`.
+- Set the `Script path` with `customer-service/src/main/jenkins/Jenkinsfile`.
 
 The `Jenkinsfile` is composed by the following stages:
 
@@ -136,3 +137,27 @@ Inside the Kubernetes, the following services were deployed:
 - Private image registry, although in the end it was not necessary because the image of the example was deployed to the public Docker Hub.
 
 The Jenkins server was installed locally in the development machine.
+
+## Debug image generated for build by Jenkins
+
+```bash
+export DOCKER_BUILDKIT=1 && docker build -t jenkins_java17 -f ./customer-service/src/main/jenkins/Dockerfile .
+```
+- Run the image as container:
+```bash
+docker run --name jenkins_java17 -v /root/.m2:/root/.m2 -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/var/lib/secure-api-spring -w /var/lib/secure-api-spring -d jenkins_java17 sleep infinity
+```
+- Enter inside the container using the image ID returned by the previous command:
+```bash
+docker exec -it <Image ID> /bin/bash
+```
+- Execute a maven command:
+```bash
+./mvnw clean test
+```
+
+### Stop the container after finish
+
+```bash
+docker container rm -f <Image ID>
+```
