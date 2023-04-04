@@ -35,9 +35,8 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
-                    cd customer-service
                     export DOCKER_BUILDKIT=1
-                    ./mvnw spring-boot:build-image -DskipTests -DregistryTag=${REGISTRY_TAG} -DspringAppPort=${SPRING_APP_PORT}
+                    ./mvnw spring-boot:build-image -f customer-service -DskipTests -DregistryTag=${REGISTRY_TAG} -DspringAppPort=${SPRING_APP_PORT}
                     docker login ${REGISTRY_HOST} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
                     docker tag secure-api-spring:0.0.1-SNAPSHOT ${REGISTRY_TAG}/secure-api-spring:0.0.1-SNAPSHOT
                     docker push ${REGISTRY_TAG}/secure-api-spring:0.0.1-SNAPSHOT
