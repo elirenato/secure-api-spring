@@ -1,6 +1,6 @@
 # Secure API Spring (Library)
 
-## Directory structure
+## Directory Organization
 
 The directory structure follow the [Maven Standard Directory Layout](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html).
 - `src/main/java`: Java code.
@@ -8,8 +8,8 @@ The directory structure follow the [Maven Standard Directory Layout](https://mav
 - `src/test/java`: Java test code.
 - `src/test/resources`: Library test resources.
 
-## Running tests
+## Running maven commands for all modules
 
-`./mvnw test`
+`./mvnw test` or `./mvnw install`
 
-PS: There is no test inside it yet. It was created to hold some config that could be shared between services.
+PS: There is no test inside it yet. It was created to hold some code that could be shared between services.

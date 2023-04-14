@@ -1,6 +1,6 @@
 # Secure API Spring (Application)
 
-## Directory structure
+## Directory Organization
 
 The directory structure follow the [Maven Standard Directory Layout](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html).
 - `src/main/java`: Java code.
@@ -33,37 +33,6 @@ and see `target/site/jacoco/index.html`
 
 PS: Read first the [Keycloak](../keycloak/README.md) before run the application.
 
-## Packaging and running the application
-
-The application can be packaged using:
-```bash
-./mvnw package
-```
-
-## Debug image generated for deployment
-
-If you would like to debug the image generated for deployment, here are the steps:
-
-- Start the dependencies. See `Before run the application in com mode above` section above. 
-- Build the image:
-```bash
-export DOCKER_BUILDKIT=1 && /mvnw spring-boot:build-image 
-```
-- Run the image as container:
-```bash
-docker run --name secure-api-spring -p 8081:8081 --add-host=host.docker.internal:host-gateway  --env DATASOURCE_JDBC_URL=jdbc:postgresql://host.docker.internal:5432/app_dev --env OIDC_AUTH_SERVER_URL=http://host.docker.internal:8080/realms/app --env LOG_LEVEL=DEBUG -d secure-api-spring:0.0.1-SNAPSHOT sleep infinity
-```
-- Enter inside the container using the image ID returned by the previous command:
-```bash
-docker exec -it <Image ID> /bin/bash
-```
-- Execute the jar file
-```bash
-java -jar /customer-service-0.0.1-SNAPSHOT.jar
-```
-
-PS: Starting the project from a container like this, the OIDC_AUTH_SERVER_URL environment was changed to access Keycloak of the Host machine. The JWT token generated should also use the same URL to avoid the error `The iss claim is not valid`.
-
 ## Deploying application to Kubernetes using Jenkins
 
 Create a `New Item` of the type `Pipeline` inside Jenkins.
@@ -78,7 +47,7 @@ The `Jenkinsfile` is composed by the following stages:
 - Build: Build the image and push to the registry repository.
 - Deploy: Deploy the image to the Kubernetes.
 
-PS: For subsequent builds, increase the version number inside all files with the current version (e.g. search by 0.0.1-SNAPSHOT and replace it by the next version in all files found).
+PS: For subsequent builds, increase the version number inside all files with the current version (e.g. search by 0.0.2-SNAPSHOT and replace it by the next version in all files found).
 
 See the [Jenkinsfile](../jenkins/Jenkinsfile) for more details.
 

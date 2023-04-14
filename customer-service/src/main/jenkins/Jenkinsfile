@@ -22,7 +22,7 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh './mvnw clean test'
+                sh './mvnw test'
             }
             // Must have JaCoCo plugin installed
             post {
@@ -35,11 +35,12 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
+                    ./mvnw install
                     export DOCKER_BUILDKIT=1
                     ./mvnw spring-boot:build-image -f customer-service -DskipTests -DregistryTag=${REGISTRY_TAG} -DspringAppPort=${SPRING_APP_PORT}
                     docker login ${REGISTRY_HOST} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
-                    docker tag customer-service:0.0.1-SNAPSHOT ${REGISTRY_TAG}/customer-service:0.0.1-SNAPSHOT
-                    docker push ${REGISTRY_TAG}/customer-service:0.0.1-SNAPSHOT
+                    docker tag customer-service:0.0.2-SNAPSHOT ${REGISTRY_TAG}/customer-service:0.0.2-SNAPSHOT
+                    docker push ${REGISTRY_TAG}/customer-service:0.0.2-SNAPSHOT
                 """
             }
         }
