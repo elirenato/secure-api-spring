@@ -1,0 +1,377 @@
+{
+	"info": {
+		"_postman_id": "04e74fac-417e-4fe3-a06b-bb67f2a9de13",
+		"name": "App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "561627",
+		"_collection_link": "https://lively-sunset-330054.postman.co/workspace/Test-Spring-New~42dab7ac-5237-4267-adb7-a544b80a2e60/collection/561627-04e74fac-417e-4fe3-a06b-bb67f2a9de13?action=share&creator=561627&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "List all countries",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/countries",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get country",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/countries/1",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List all state/provinces",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/state-provinces?country=1",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"state-provinces"
+							],
+							"query": [
+								{
+									"key": "country",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer Service",
+			"item": [
+				{
+					"name": "App Build version",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept-language",
+								"value": "ptx",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/app/build",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"build"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"customerId\", jsonData.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\" : \"1633 Garden Ave\",\n    \"address2\" : \"Apt. 736\",\n    \"email\" : \"ned.stark@example.com\",\n    \"firstName\" : \"Ned\",\n    \"lastName\" : \"Stark\",\n    \"postalCode\" : \"87258\",\n    \"stateProvince\" : {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/customers",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get customer",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept-language",
+								"value": "ptx",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/customers/{{customerId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List all customers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/customers",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update customer",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "pt",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\" : {{customerId}},\n    \"address\" : \"1633 Garden Ave\",\n    \"address2\" : \"Apt. 736\",\n    \"email\" : \"ned.stark@example.com\",\n    \"firstName\" : \"Ned\",\n    \"lastName\" : \"Stark\",\n    \"postalCode\" : \"87258\",\n    \"stateProvince\" : {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/customers/{{customerId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete customer",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/customers/{{customerId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Keycloak",
+			"item": [
+				{
+					"name": "Generate Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"authToken\", jsonData.access_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"strictSSL": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{keycloakClientID}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{keycloakClientSecret}}",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{realmUsername}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{realmPassword}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{keycloakUrl}}/realms/app/protocol/openid-connect/token",
+							"host": [
+								"{{keycloakUrl}}"
+							],
+							"path": [
+								"realms",
+								"app",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

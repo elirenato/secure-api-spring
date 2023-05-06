@@ -1,8 +1,9 @@
 # Secure API with Spring Boot 3
 
-This project is a Java REST API application that was configured to use [Keycloak](https://www.keycloak.org) as access management.
+This git mono repository is an example Java REST API application that was configured to use [Keycloak](https://www.keycloak.org) as access management.
 
 It was bootstrapped using [Spring Initializer](https://start.spring.io/) with the following dependencies:
+
 - RESTful classic (spring-boot-starter-web).
 - JUnit Jupiter, Hamcrest and Mockito (spring-boot-starter-test).
 - OIDC to enable the integration with Keycloak (spring-boot-starter-oauth2-resource-server).
@@ -14,173 +15,80 @@ It was bootstrapped using [Spring Initializer](https://start.spring.io/) with th
 - [Lombok](https://projectlombok.org/) to be less verbose in this example.
 - Deploy with Jenkins to a self-hosted server with Kubernetes (EC2 or other).
 
-## Directory Structure
+## Initial steps
 
-This project follows the default Java structure `/src/main`.
+### 1st step
 
-- `/src/docs` - A quick reference of how to create a realm with Keycloak version 20 and a Postman collection with sample requests to the endpoints of this project.
-- `/src/main/java` - The Java code.
-- `/src/main/test` - The Java test code.
-- `/src/main/docker`: The Docker files to build and run the Postgres and Keycloak containers required for test and development.
-- `/src/main/jenkins`: - Jenkins file and resources that are used to set up the pipeline to build and deploy the application to a self-hosted env (EC2).
+Right after clone the repository, just run the install command inside the root directory:
 
-## Running tests
+`./mvnw install`
 
-The tests use the Testcontainers to start a PostgreSQL container, so, you can just run:
+Maven will download all the dependencies and run the tests with success.
 
-`./mvnw test`
+## 2nd step
 
-## Generate coverage test report 
+The Customer Service app is the main Spring Application of this example, it depends on Keycloak and the PostgreSQL.
 
-`./mvnw jacoco:report`
+To start these dependencies run the following command:
 
-and see `target/site/jacoco/index.html`
+`cd keycloak && ./keycloak.sh up -d && cd ..`
 
-## Before run the application in dev mode
+After that:
 
-### Keycloak (20.0.1) and PostgreSQL (15.1)
+1. Keycloak will be available at `http://localhost:8080/admin/master/console/#/`. For test purpose the username and password is admin/admin. 
+2. PostgreSQL will be available at `localhost:5432`. For test purpose the username and password will be postgres/postgres.
 
-This application depend on these services, so, you must have them running.
+## 3rd step
 
-For dev purpose, you can use the bash script `./dependencies.sh up` to start Docker containers with these services.
+Run the Customer Service App.
 
-The Keycloak will be available at `http://localhost:8080`.
+`cd customer-service && ./mvnw spring-boot:run`
 
-To stop the containers you can use the script `./dependencies.sh down`.
+You should be seen the Spring boot start without ANY error.
 
-### Keycloak Realm
+The default port is `8081`. If you try the url `http://localhost:8081/api/app/build` in the browser you should get a HTTP ERROR 401 (Unauthorized error).
 
-To complete the setup of Keycloak, you also need to configure a Realm to test the application.
+To access this endpoint, you must be authenticated, see the next step to configure the Keycloak and create valid credentials to hit this endpoint.
 
-[Configure a new realm](./docs/create-new-realm-keycloak-20.pdf).
+## 4th step
 
-### Run the application in dev mode
+1. Navigate to the url `http://localhost:8080/admin/master/console/#/` and login using the admin/admin credential.
+2. Follow these [instructions](./keycloak/docs/create-new-realm-keycloak-20.pdf) to create a new realm inside Keycloak. Each realm has its own set of users, roles, and permissions, and a user in one realm is not automatically granted access to resources in another realm.
 
-Finally, it's possible to run the application:
-```bash
-./mvnw spring-boot:run
-```
+## 5th step
 
-## Packaging and running the application
+Let's use Postman to make request to the Customer Service API.
 
-The application can be packaged using:
-```bash
-./mvnw package
-```
+1. Create a new Workspace with a meaningful like Spring Boot Application.
+2. Inside `Collections`, import this [Postman collection](./customer-service/docs/App.postman_collection.json).
+3. Inside `Environments`, import this [Postman environment](./customer-service/docs/Local.postman_environment.json). Variables of the Postman environment that you must change or double check:
+   - client_secret: You must change the value of this variable with the value that Keycloak generated when you created the Client inside the Realm. Copy it from this place: App (Realm) -> Clients (secure-api) -> Credentials (Tab of the secure-api client) -> Client Secret (click the icon to see the value).
+   - keycloakClientID, realmUsername and realmPassword: If you followed the values suggested on the PDF of the 4th step, you won't need to change, otherwise, please set them with the values you have used.
+4. Go to `Collections->Keycloak->Generate Access Token` POST request and click Send button. You should be able to make this request with success.
+   - The `Generate Access Token` request will automatically set the environment variable called `authToken` that will be required for the next requests.
+5. Go to `Collections->Customer Service->App Build Version` GET request and click Send button. Now you should be able to make this request with success.
 
-## Debug image generated for build by Jenkins
+In the same way as App Build version should have worked, the following requests should also work if called in the same order:
+1. `Customer Service->Create customer`.
+2. `Customer Service->Get customer`.
+3. `Customer Service->List all customers`.
+4. `Customer Service->Update customer`.
+5. `Customer Service->Delete customer`.
 
-- Build the image:
-```bash
-export DOCKER_BUILDKIT=1 && docker build -t jenkins_java17 -f ./src/main/jenkins/Dockerfile . --no-cache
-```
-- Run the image as container:
-```bash
-docker run --name jenkins_java17 -v /root/.m2:/root/.m2 -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/var/lib/secure-api-spring -w /var/lib/secure-api-spring -d jenkins_java17 sleep infinity
-```
-- Enter inside the container using the image ID returned by the previous command:
-```bash
-docker exec -it <Image ID> /bin/sh
-```
-- Execute a maven command:
-```bash
-./mvnw clean test
-```
 
-## Debug image generated for deployment
+## Open the repository using IntelliJ IDEA (Community Edition)
 
-If you would like to debug the image generated for deployment, here are the steps:
+When opening this repository with IntelliJ, open the root directory `secure-api-spring` directly, it will automatically import the `common-library` and `customer-service` as modules.
 
-- Start the dependencies. See `Before run the application in dev mode above` section above. 
-- Build the image:
-```bash
-export DOCKER_BUILDKIT=1 && /mvnw spring-boot:build-image 
-```
-- Run the image as container:
-```bash
-docker run --name secure-api-spring -p 8081:8081 --add-host=host.docker.internal:host-gateway  --env DATASOURCE_JDBC_URL=jdbc:postgresql://host.docker.internal:5432/app_dev --env OIDC_AUTH_SERVER_URL=http://host.docker.internal:8080/realms/app --env LOG_LEVEL=DEBUG -d secure-api-spring:0.0.1-SNAPSHOT sleep infinity
-```
-- Enter inside the container using the image ID returned by the previous command:
-```bash
-docker exec -it <Image ID> /bin/sh
-```
-- Execute the jar file
-```bash
-java -jar /secure-api-spring-0.0.1-SNAPSHOT.jar
-```
+When the IDE show the popup `Lombok requires enable annotation processing`, click in the button `Enable annotation processing`.
 
-PS: Starting the project from a container like this, the OIDC_AUTH_SERVER_URL environment was changed to access Keycloak of the Host machine. The JWT token generated should also use the same URL to avoid the error `The iss claim is not valid`.
+You should be able to run tests and debug directly from the IDE normally.
 
-## Deploying application to Kubernetes using Jenkins
+## Directory Organization
 
-Create a `New Item` of the type `Pipeline` inside Jenkins.
+The directories are structured like a [Multi Module Project for Spring Boot](https://spring.io/guides/gs/multi-module/):
+- The [common-library](./common-library/README.md) directory is a library module, it was created with the purpose to share code between different services.
+- The [customer-service](./customer-service/README.md) directory is the main application module of this repository, and it was bootstrapped with the dependencies mentioned above.
+- The [keycloak](./keycloak/README.md) directory is not a maven module, however it was created to keep docker images that are used to run Keycloak and PostgreSQL.
 
-- Use the URL of the Git repository as the Pipeline Repository URL.
-- Set the `Branches to bulid` with the name of the branches. E.g. `*/main`.
-- Set the `Script path` with `src/main/jenkins/Jenkinsfile`.
-
-The `Jenkinsfile` is composed by the following stages:
-
-- Test: Run the tests with coverage report.
-- Build: Build the image and push to the registry repository.
-- Deploy: Deploy the image to the Kubernetes.
-
-PS: For subsequent builds, increase the version number inside all files with the current version (e.g. search by 0.0.1-SNAPSHOT and replace it by the next version in all files found).
-
-See the [Jenkinsfile](./src/main/jenkins/Jenkinsfile) for more details.
-
-### Jenkins required plugins
-
-- Docker Pipeline.
-- Docker Commons.
-- JaCoCo.
-- SSH Agent.
-
-### Jenkins required environment variables (Manage Jenkins -> Configure System -> Global Properties)
-
-- K8S_SERVER_HOST: Host of the server with the Kubernetes.
-- K8S_SERVER_PORT: SSH of the server with the Kubernetes.
-- K8S_SERVER_USERNAME: Username to access the server with the Kubernetes.
-- REGISTRY_HOST: Private image registry. Leave empty to use the public Docker Hub registry.
-- REGISTRY_USERNAME: Registry Username.
-- REGISTRY_PASSWORD: Registry Password.
-- REGISTRY_TAG: Registry Image Tag prefix. Use the Username for the public Docker Hub registry.
-- SPRING_APP_PORT: Same server port used inside the application.properties.
-
-PS: The server with the Kubernetes must have authentication with SSH key pairs. Add the private key inside (Manage Jenkins -> Credentials -> System -> Global credentials).
-
-### Kubernetes Config Map example
-
-```yaml
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: secure-api-spring-cfg-map
-  namespace: default
-data:
-  LOG_LEVEL: "ERROR"
-  OIDC_AUTH_SERVER_URL: "https://<OIDC_HOST>/realms/app"
-  DATASOURCE_JDBC_URL: "jdbc:postgresql://<DATABASE_HOST>:<DATABASE_PORT>/<DATABASE_NAME>"
-  DATASOURCE_USERNAME: "<DATABASE_USERNAME>"
-  DATASOURCE_PASSWORD: "<DATABASE_PASSWORD>"
-  SPRING_APP_PORT: "<SPRING_APP_PORT>"
-  SPRING_APP_CONTEXT_PATH: "/api"
-  CORS_ORIGINS: "<CLIENT_APP_HOST_FOR_CORS_ORIGINS>"
-```
-
-### How this application was deployed for develop and test purpose.
-
-- One AWS EC2 service was created from the scratch with the following specifications.
-- Ubuntu 22.04.
-- MicroK8S (Kubernetes). Some addons were added:
-    - Cert-manager to manage SSL certificates with Lets encrypt.
-    - NGINX ingress as a reverse proxy. Because of that there is no SSL configuration in the Spring Boot project, it runs behind a proxy that uses SSL.
-    - Hostpath-storage to map the volume used by the private registry.
-
-Inside the Kubernetes, the following services were deployed:
-- PostgreSQL service as database.
-- Keycloak version 20 as OIDC server.
-- The Spring Boot app generated by this repository and deployed with Jenkins.
-- Private image registry, although in the end it was not necessary because the image of the example was deployed to the public Docker Hub.
-
-The Jenkins server was installed locally in the development machine.
+PS: For more information about deploy using Jenkins, see the README file of `customer-service` above.

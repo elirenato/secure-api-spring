@@ -1,0 +1,57 @@
+pipeline {
+    options {
+      timeout(time: 10, unit: 'MINUTES')
+      disableConcurrentBuilds()
+    }
+    agent {
+        // Must have Docker Pipeline and Docker Commons Plugin Installed
+        // The image name could be used but with the Dockerfile it's possible customize the image if needed
+        dockerfile {
+            filename 'Dockerfile'
+            dir './customer-service/src/main/jenkins'
+            args """
+                -u root:root
+                -v /root/.m2:/root/.m2
+                -v /var/run/docker.sock:/var/run/docker.sock
+                -e REGISTRY_HOST=$REGISTRY_HOST
+                -e REGISTRY_USERNAME=$REGISTRY_USERNAME
+                -e REGISTRY_PASSWORD=$REGISTRY_PASSWORD
+            """
+        }
+    }
+    stages {
+        stage('Test') {
+            steps {
+                sh './mvnw test'
+            }
+            // Must have JaCoCo plugin installed
+            post {
+                always {
+                    junit 'customer-service/target/surefire-reports/*.xml'
+                    step( [ $class: 'JacocoPublisher' ] )
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                sh """
+                    ./mvnw install -DskipTests
+                    export DOCKER_BUILDKIT=1
+                    ./mvnw spring-boot:build-image -f customer-service -DskipTests -DregistryTag=${REGISTRY_TAG} -DspringAppPort=${SPRING_APP_PORT}
+                    docker login ${REGISTRY_HOST} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
+                    docker tag customer-service:0.0.3-SNAPSHOT ${REGISTRY_TAG}/customer-service:0.0.3-SNAPSHOT
+                    docker push ${REGISTRY_TAG}/customer-service:0.0.3-SNAPSHOT
+                """
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Must have SSH Agent Plugin installed
+                sshagent (credentials: ['k8s'])  {
+                    sh 'scp -o StrictHostKeyChecking=no -r -v -P ${K8S_SERVER_PORT} ./customer-service/target/kubernetes/kubernetes.yaml ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST}:/tmp/customer-service-kubernetes.yaml'
+                    sh 'ssh -o StrictHostKeyChecking=no -p ${K8S_SERVER_PORT} ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST} \"microk8s kubectl apply -f /tmp/customer-service-kubernetes.yaml\"'
+                }
+            }
+        }
+    }
+}
