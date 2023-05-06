@@ -17,7 +17,7 @@ Other directories:
 
 The tests use the Testcontainers to start a PostgreSQL container, so, you can just run:
 
-`./mvnw test`
+`./mvnw install`
 
 ### Generate coverage test report 
 
@@ -27,9 +27,7 @@ and see `target/site/jacoco/index.html`
 
 ### Run the application in dev mode
 
-```bash
-./mvnw spring-boot:run
-```
+`./mvnw spring-boot:run`
 
 PS: Read first the [Keycloak](../keycloak/README.md) before run the application.
 
@@ -47,7 +45,7 @@ The `Jenkinsfile` is composed by the following stages:
 - Build: Build the image and push to the registry repository.
 - Deploy: Deploy the image to the Kubernetes.
 
-PS: For subsequent builds, increase the version number inside all files with the current version (e.g. search by 0.0.2-SNAPSHOT and replace it by the next version in all files found).
+PS: For subsequent builds, increase the version number inside all files with the current version (e.g. search by 0.0.3-SNAPSHOT and replace it by the next version in all files found).
 
 See the [Jenkinsfile](../jenkins/Jenkinsfile) for more details.
 

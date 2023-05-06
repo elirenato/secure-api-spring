@@ -6,7 +6,7 @@
 
 This application depend on these services, so, you must have them running.
 
-For com purpose, you can use the bash script `./keycloak.sh up` to start Docker containers with these services.
+For dev purpose, you can use the bash script `./keycloak.sh up` to start Docker containers with these services.
 
 The Keycloak will be available at `http://localhost:8080`.
 

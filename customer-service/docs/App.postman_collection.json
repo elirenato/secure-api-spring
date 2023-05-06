@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "d135f6bb-7ff7-4dfd-add7-9d2487cf4ec9",
+		"_postman_id": "04e74fac-417e-4fe3-a06b-bb67f2a9de13",
 		"name": "App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "561627"
+		"_exporter_id": "561627",
+		"_collection_link": "https://lively-sunset-330054.postman.co/workspace/Test-Spring-New~42dab7ac-5237-4267-adb7-a544b80a2e60/collection/561627-04e74fac-417e-4fe3-a06b-bb67f2a9de13?action=share&creator=561627&source=collection_link"
 	},
 	"item": [
 		{
@@ -24,7 +25,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/countries",
+							"raw": "{{apiUrl}}/api/countries",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -51,7 +52,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/countries/1",
+							"raw": "{{apiUrl}}/api/countries/1",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -76,7 +77,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/state-provinces?country=1",
+							"raw": "{{apiUrl}}/api/state-provinces?country=1",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -97,10 +98,53 @@
 			]
 		},
 		{
-			"name": "Customers",
+			"name": "Customer Service",
 			"item": [
 				{
+					"name": "App Build version",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept-language",
+								"value": "ptx",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/app/build",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"build"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"customerId\", jsonData.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -117,7 +161,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\" : 100,\n    \"address\" : \"1\",\n    \"address2\" : \"Apt. 736\",\n    \"email\" : \"ned.stark@example.com\",\n    \"firstName\" : \"Ned\",\n    \"lastName\" : \"Stark\",\n    \"postalCode\" : \"87258\",\n    \"stateProvince\" : {\n        \"id\": 1\n    }\n}",
+							"raw": "{\n    \"address\" : \"1633 Garden Ave\",\n    \"address2\" : \"Apt. 736\",\n    \"email\" : \"ned.stark@example.com\",\n    \"firstName\" : \"Ned\",\n    \"lastName\" : \"Stark\",\n    \"postalCode\" : \"87258\",\n    \"stateProvince\" : {\n        \"id\": 1\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -125,7 +169,61 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUrl}}/customers",
+							"raw": "{{apiUrl}}/api/customers",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get customer",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept-language",
+								"value": "ptx",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/customers/{{customerId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List all customers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{apiUrl}}/api/customers",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -155,7 +253,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\" : 100,\n    \"address\" : \"1\",\n    \"address2\" : \"Apt. 736\",\n    \"email\" : \"ned.stark@example.com\",\n    \"firstName\" : \"Ned\",\n    \"lastName\" : \"Stark\",\n    \"postalCode\" : \"87258\",\n    \"stateProvince\" : {\n        \"id\": 1\n    }\n}",
+							"raw": "{\n    \"id\" : {{customerId}},\n    \"address\" : \"1633 Garden Ave\",\n    \"address2\" : \"Apt. 736\",\n    \"email\" : \"ned.stark@example.com\",\n    \"firstName\" : \"Ned\",\n    \"lastName\" : \"Stark\",\n    \"postalCode\" : \"87258\",\n    \"stateProvince\" : {\n        \"id\": 1\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -163,68 +261,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUrl}}/customers/1000000",
+							"raw": "{{apiUrl}}/api/customers/{{customerId}}",
 							"host": [
 								"{{apiUrl}}"
 							],
 							"path": [
 								"api",
 								"customers",
-								"1000000"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List all customers",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{apiUrl}}/customers",
-							"host": [
-								"{{apiUrl}}"
-							],
-							"path": [
-								"api",
-								"customers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get customer",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
-							},
-							{
-								"key": "Accept-language",
-								"value": "ptx",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{apiUrl}}/customers/1111x",
-							"host": [
-								"{{apiUrl}}"
-							],
-							"path": [
-								"api",
-								"customers",
-								"1111x"
+								"{{customerId}}"
 							]
 						}
 					},
@@ -242,14 +286,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{apiUrl}}/customers/4",
+							"raw": "{{apiUrl}}/api/customers/{{customerId}}",
 							"host": [
 								"{{apiUrl}}"
 							],
 							"path": [
 								"api",
 								"customers",
-								"4"
+								"{{customerId}}"
 							]
 						}
 					},
@@ -262,6 +306,19 @@
 			"item": [
 				{
 					"name": "Generate Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"authToken\", jsonData.access_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"strictSSL": false
 					},
@@ -288,12 +345,12 @@
 								},
 								{
 									"key": "username",
-									"value": "user-manager",
+									"value": "{{realmUsername}}",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "change_me",
+									"value": "{{realmPassword}}",
 									"type": "text"
 								}
 							]
@@ -309,62 +366,6 @@
 								"protocol",
 								"openid-connect",
 								"token"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get User Authorities",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {}
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{apiUrl}}/user/authorities",
-							"host": [
-								"{{apiUrl}}"
-							],
-							"path": [
-								"user",
-								"authorities"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Groups",
-			"item": [
-				{
-					"name": "List groups",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{apiUrl}}/countries",
-							"host": [
-								"{{apiUrl}}"
-							],
-							"path": [
-								"api",
-								"countries"
 							]
 						}
 					},

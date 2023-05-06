@@ -10,6 +10,6 @@ The directory structure follow the [Maven Standard Directory Layout](https://mav
 
 ## Running maven commands for all modules
 
-`./mvnw test` or `./mvnw install`
+`./mvnw install`
 
 PS: There is no test inside it yet. It was created to hold some code that could be shared between services.

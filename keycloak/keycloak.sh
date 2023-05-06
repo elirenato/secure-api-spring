@@ -1,6 +1,6 @@
 #!/bin/bash
-if [ ! -f "./docker/docker-compose.env" ]
+if [ ! -f "./docker/.env" ]
 then
-  cp ./docker/docker-compose.env.example ./docker/docker-compose.env
+  cp ./docker/.env.example ./docker/.env
 fi
-docker-compose -f ./docker/docker-compose.yaml --env-file=./docker/docker-compose.env --compatibility "$@"
+docker-compose -f ./docker/docker-compose.yaml --env-file=./docker/.env --compatibility "$@"

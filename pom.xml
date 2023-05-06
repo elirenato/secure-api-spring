@@ -5,7 +5,7 @@
 
     <groupId>com.company.secureapispring</groupId>
     <artifactId>secure-api-spring-parent</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Secure API Spring - Parent</name>
 
