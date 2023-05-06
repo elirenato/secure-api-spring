@@ -47,7 +47,7 @@ The `Jenkinsfile` is composed by the following stages:
 
 PS: For subsequent builds, increase the version number inside all files with the current version (e.g. search by 0.0.3-SNAPSHOT and replace it by the next version in all files found).
 
-See the [Jenkinsfile](../jenkins/Jenkinsfile) for more details.
+See the [Jenkinsfile](./src/main/jenkins/Jenkinsfile) for more details.
 
 ### Jenkins required plugins
 
