@@ -1,0 +1,21 @@
+# Make sure to use a strong password and harden the configuration in case you expose image outside your local machine
+services:
+  keycloak:
+    container_name: secure-api-spring-keycloak
+    image: quay.io/keycloak/keycloak:26.0.0
+    command: 'start-dev --import-realm'
+    env_file:
+      - ../.env # copy the .env.example as change the password as you wish
+    environment:
+      - KC_DB=postgres
+      - KC_DB_URL_HOST=postgresql
+      - KC_DB_URL_PORT=5432
+      - KC_DB_SCHEMA=public
+      - KC_LOG_LEVEL=ERROR
+      - KEYCLOAK_ADMIN=admin
+    ports:
+      - ${KC_PORT}
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - ./data:/opt/keycloak/data/import

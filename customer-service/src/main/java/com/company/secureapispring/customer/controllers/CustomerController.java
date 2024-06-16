@@ -1,13 +1,15 @@
 package com.company.secureapispring.customer.controllers;
 
-import com.company.secureapispring.common.exceptions.BadRequestException;
 import com.company.secureapispring.customer.entities.Customer;
+import com.company.secureapispring.customer.exceptions.BadRequestException;
 import com.company.secureapispring.customer.services.CustomerService;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +18,13 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/customers")
+@RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('managers')")
+    @Secured("ROLE_ADMIN")
     public Customer create(@Valid @RequestBody Customer input) {
         if (input.getId() != null) {
             throw (new BadRequestException()).withError("id", "must be null");
@@ -34,20 +33,20 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @Secured(value = {"ROLE_ADMIN", "ROLE_ANALYST"})
     public Customer get(@NotNull @PathVariable Long id) {
         return customerService.get(id);
     }
 
     @JsonView(Customer.ListJsonView.class)
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @Secured(value = {"ROLE_ADMIN", "ROLE_ANALYST"})
     public List<Customer> listAll() {
         return customerService.listAll();
     }
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('managers')")
+    @Secured("ROLE_ADMIN")
     public Customer update(@PathVariable Long id, @Valid @RequestBody Customer input) {
         if (!Objects.equals(id, input.getId())) {
             throw (new BadRequestException()).withError("id", "must be equals id from url");
@@ -56,7 +55,7 @@ public class CustomerController {
     }
 
     @DeleteMapping(path = "/{id}")
-    @PreAuthorize("hasAuthority('managers')")
+    @Secured("ROLE_ADMIN")
     public Customer delete(@NotNull @PathVariable Long id) {
         return customerService.delete(id);
     }

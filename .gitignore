@@ -1,4 +1,4 @@
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 .idea
-.env
+docker/.env

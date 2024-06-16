@@ -1,0 +1,12 @@
+# Make sure to use a strong password and harden the configuration in case you expose image outside your local machine
+services:
+  postgresql:
+    extends:
+      file: ./postgresql/postgresql.yml
+      service: postgresql
+  keycloak:
+    extends:
+      file: ./keycloak/keycloak.yml
+      service: keycloak
+    depends_on:
+      - postgresql

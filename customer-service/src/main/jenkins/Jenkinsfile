@@ -1,6 +1,6 @@
 pipeline {
     options {
-      timeout(time: 10, unit: 'MINUTES')
+      timeout(time: 5, unit: 'MINUTES')
       disableConcurrentBuilds()
     }
     agent {
@@ -8,48 +8,84 @@ pipeline {
         // The image name could be used but with the Dockerfile it's possible customize the image if needed
         dockerfile {
             filename 'Dockerfile'
-            dir './customer-service/src/main/jenkins'
+            dir './docker/jenkins'
             args """
                 -u root:root
-                -v /root/.m2:/root/.m2
+                -v /home/jenkins/.m2:/root/.m2
+                -v /home/jenkins/.customer-service-deploys:/root/.customer-service-deploys
                 -v /var/run/docker.sock:/var/run/docker.sock
-                -e REGISTRY_HOST=$REGISTRY_HOST
-                -e REGISTRY_USERNAME=$REGISTRY_USERNAME
-                -e REGISTRY_PASSWORD=$REGISTRY_PASSWORD
             """
         }
     }
     stages {
+        stage('Setup') {
+            steps {
+                script {
+                    env.PROJECT_ARTIFACT = "customer-service"
+                    env.APP_VERSION = sh(
+                        script: "./mvnw -pl ${env.PROJECT_ARTIFACT} help:evaluate -Dexpression=project.version -q -DforceStdout",
+                        returnStdout: true
+                    ).trim()
+                    env.ENV_NAME = "${env.BRANCH_NAME}"
+                    env.SPRING_APP_PORT = 8081
+                    env.NAMESPACE = "default"
+                    env.REPLICAS = "1"
+                    env.LOCAL_IMAGE_TAG = "${env.PROJECT_ARTIFACT}:${env.APP_VERSION}"
+                    env.REMOTE_IMAGE_TAG = "${DOCKER_REGISTRY_NAMESPACE}/${env.PROJECT_ARTIFACT}:${env.APP_VERSION}-${BUILD_NUMBER}"
+                    env.CHANGE_CAUSE = "App version ${env.APP_VERSION}, build #${BUILD_NUMBER}"
+                }
+            }
+        }
         stage('Test') {
             steps {
-                sh './mvnw test'
+                sh """
+                    ./mvnw test -P${PROJECT_ARTIFACT}
+                """
             }
             // Must have JaCoCo plugin installed
             post {
                 always {
-                    junit 'customer-service/target/surefire-reports/*.xml'
+                    junit "${env.PROJECT_ARTIFACT}/target/surefire-reports/*.xml"
                     step( [ $class: 'JacocoPublisher' ] )
                 }
             }
         }
-        stage('Build') {
+        stage('Package') {
             steps {
                 sh """
-                    ./mvnw install -DskipTests
-                    export DOCKER_BUILDKIT=1
-                    ./mvnw spring-boot:build-image -f customer-service -DskipTests -DregistryTag=${REGISTRY_TAG} -DspringAppPort=${SPRING_APP_PORT}
-                    docker login ${REGISTRY_HOST} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
-                    docker tag customer-service:0.0.3-SNAPSHOT ${REGISTRY_TAG}/customer-service:0.0.3-SNAPSHOT
-                    docker push ${REGISTRY_TAG}/customer-service:0.0.3-SNAPSHOT
+                    ./mvnw install -P${env.PROJECT_ARTIFACT}
                 """
+            }
+        }
+        // This stage push the docker image of the project to PUBLIC repository on Docker Hub.
+        // MAKE SURE TO CHANGE THIS PIPELINE IT IF YOU WANT IT PRIVATE.
+        stage('Build and Push the Docker Image') {
+            steps {
+                withCredentials([
+                    usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'REGISTRY_USERNAME', passwordVariable: 'REGISTRY_PASSWORD'),
+                ]) {
+                    sh """
+                        ./mvnw spring-boot:build-image -f ${env.PROJECT_ARTIFACT} -DskipTests
+                        docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
+                        docker tag ${env.LOCAL_IMAGE_TAG} ${env.REMOTE_IMAGE_TAG}
+                        docker push ${env.REMOTE_IMAGE_TAG}
+                    """
+                }
             }
         }
         stage('Deploy') {
             steps {
-                // Must have SSH Agent Plugin installed
-                sshagent (credentials: ['k8s'])  {
-                    sh 'scp -o StrictHostKeyChecking=no -r -v -P ${K8S_SERVER_PORT} ./customer-service/target/kubernetes/kubernetes.yaml ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST}:/tmp/customer-service-kubernetes.yaml'
-                    sh 'ssh -o StrictHostKeyChecking=no -p ${K8S_SERVER_PORT} ${K8S_SERVER_USERNAME}@${K8S_SERVER_HOST} \"microk8s kubectl apply -f /tmp/customer-service-kubernetes.yaml\"'
+                withCredentials([file(credentialsId: 'kube-config', variable: 'KUBE_CONFIG_FILE')]) {
+                    script {
+                        def DEPLOYMENT_FILE_NAME="deploy-${env.PROJECT_ARTIFACT}-${env.APP_VERSION}.yaml";
+                        sh """
+                            mkdir -p /root/.kube/
+                            cp $KUBE_CONFIG_FILE /root/.kube/config
+                            envsubst < ${env.PROJECT_ARTIFACT}/src/main/kubernetes/templates/deploy.yaml > "${env.PROJECT_ARTIFACT}/target/${DEPLOYMENT_FILE_NAME}"
+                            cp ${env.PROJECT_ARTIFACT}/target/${DEPLOYMENT_FILE_NAME} /root/.customer-service-deploys/${DEPLOYMENT_FILE_NAME}
+                            kubectl apply -f ${env.PROJECT_ARTIFACT}/target/${DEPLOYMENT_FILE_NAME}
+                        """
+                    }
                 }
             }
         }

@@ -5,15 +5,14 @@ import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.Customer;
 import com.company.secureapispring.customer.entities.StateProvince;
 import com.github.javafaker.Faker;
+import lombok.Getter;
 
 public final class EntityFactory {
-    private static Faker faker = Faker.instance().instance();
+    @Getter
+    private static final Faker faker = Faker.instance();
 
-    public static Faker getFaker() {
-        return faker;
+    private EntityFactory() {
     }
-
-    private EntityFactory() {}
 
     public static EntityBuilder<Country> country() {
         return EntityBuilder

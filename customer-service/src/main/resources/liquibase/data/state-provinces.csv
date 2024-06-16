@@ -1,0 +1,64 @@
+id,abbreviation,name,country_id
+1,AB,Alberta,1
+2,BC,British Columbia,1
+3,MB,Manitoba,1
+4,NB,New Brunswick,1
+5,NL,Newfoundland and Labrador,1
+6,NS,Nova Scotia,1
+7,ON,Ontario,1
+8,PE,Prince Edward Island,1
+9,QC,Quebec,1
+10,SK,Saskatchewan,1
+11,NT,Northwest Territories,1
+12,NU,Nunavut,1
+13,YT,Yukon,1
+14,AL,Alabama,2
+15,AK,Alaska,2
+16,AZ,Arizona,2
+17,AR,Arkansas,2
+18,CA,California,2
+19,CO,Colorado,2
+20,CT,Connecticut,2
+21,DE,Delaware,2
+22,FL,Florida,2
+23,GA,Georgia,2
+24,HI,Hawaii,2
+25,ID,Idaho,2
+26,IL,Illinois,2
+27,IN,Indiana,2
+28,IA,Iowa,2
+29,KS,Kansas,2
+30,KY,Kentucky,2
+31,LA,Louisiana,2
+32,ME,Maine,2
+33,MD,Maryland,2
+34,MA,Massachusetts,2
+35,MI,Michigan,2
+36,MN,Minnesota,2
+37,MS,Mississippi,2
+38,MO,Missouri,2
+39,MT,Montana,2
+40,NE,Nebraska,2
+41,NV,Nevada,2
+42,NH,New Hampshire,2
+43,NJ,New Jersey,2
+44,NM,New Mexico,2
+45,NY,New York,2
+46,NC,North Carolina,2
+47,ND,North Dakota,2
+48,OH,Ohio,2
+49,OK,Oklahoma,2
+50,OR,Oregon,2
+51,PA,Pennsylvania,2
+52,RI,Rhode Island,2
+53,SC,South Carolina,2
+54,SD,South Dakota,2
+55,TN,Tennessee,2
+56,TX,Texas,2
+57,UT,Utah,2
+58,VT,Vermont,2
+59,VA,Virginia,2
+60,WA,Washington,2
+61,WV,West Virginia,2
+62,WI,Wisconsin,2
+63,WY,Wyoming,2

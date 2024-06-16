@@ -1,0 +1,13 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+    name: "secure-api-spring-main"
+    namespace: default
+data:
+    LOG_LEVEL: "ERROR"
+    OIDC_AUTH_SERVER_URL: ""
+    DATASOURCE_JDBC_URL: ""
+    SPRING_APP_PORT: "8081"
+    SPRING_APP_CONTEXT_PATH: ""
+    CORS_ORIGINS: ""
+
