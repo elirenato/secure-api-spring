@@ -10,6 +10,7 @@ import lombok.Getter;
 public final class EntityFactory {
     @Getter
     private static final Faker faker = Faker.instance();
+    private static int counter;
 
     private EntityFactory() {
     }
@@ -28,12 +29,17 @@ public final class EntityFactory {
                 .with(StateProvince::setName, faker.address().state());
     }
 
+    // Safe generate unique email during tests
+    public static String generateUniqueEmail() {
+        return faker.internet().emailAddress().replace("@", "+" + (counter++) + "@");
+    }
+
     public static EntityBuilder<Customer> customer() {
         return EntityBuilder
                 .of(Customer::new)
                 .with(Customer::setFirstName, faker.name().firstName())
                 .with(Customer::setLastName, faker.name().lastName())
-                .with(Customer::setEmail, faker.internet().emailAddress())
+                .with(Customer::setEmail, generateUniqueEmail())
                 .with(Customer::setAddress, faker.address().streetAddressNumber())
                 .with(Customer::setAddress2, faker.address().secondaryAddress())
                 .with(Customer::setPostalCode, faker.address().zipCode());

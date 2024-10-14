@@ -11,16 +11,16 @@ case $1 in
     "services:down")
         docker compose --env-file=docker/.env -f docker/services.yml down -v
         ;;
-    "customer-service:run")
-        ./mvnw -pl customer-service spring-boot:run
+    "customer-svc:run")
+        ./mvnw -pl customer-svc spring-boot:run
         ;;
-    "customer-service:install")
-        ./mvnw clean install -Pcustomer-service
+    "customer-svc:install")
+        ./mvnw clean install -Pcustomer-svc
         ;;
-    "customer-service:test-report")
-        ./mvnw -pl customer-service jacoco:report
+    "customer-svc:test-report")
+        ./mvnw -pl customer-svc jacoco:report
         echo -e "\nClick in the link below to open the report on the default browser:\n"
-        echo -e "file://$(pwd)/customer-service/target/site/jacoco/index.html\n"
+        echo -e "file://$(pwd)/customer-svc/target/site/jacoco/index.html\n"
         ;;
     "docker:jenkins:up")
         docker compose -f docker/jenkins/jenkins-agent.yml up --build

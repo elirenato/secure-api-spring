@@ -12,7 +12,7 @@ pipeline {
             args """
                 -u root:root
                 -v /home/jenkins/.m2:/root/.m2
-                -v /home/jenkins/.customer-service-deploys:/root/.customer-service-deploys
+                -v /home/jenkins/.customer-svc-deploys:/root/.customer-svc-deploys
                 -v /var/run/docker.sock:/var/run/docker.sock
             """
         }
@@ -21,7 +21,7 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    env.PROJECT_ARTIFACT = "customer-service"
+                    env.PROJECT_ARTIFACT = "customer-svc"
                     env.APP_VERSION = sh(
                         script: "./mvnw -pl ${env.PROJECT_ARTIFACT} help:evaluate -Dexpression=project.version -q -DforceStdout",
                         returnStdout: true
@@ -82,7 +82,7 @@ pipeline {
                             mkdir -p /root/.kube/
                             cp $KUBE_CONFIG_FILE /root/.kube/config
                             envsubst < ${env.PROJECT_ARTIFACT}/src/main/kubernetes/templates/deploy.yaml > "${env.PROJECT_ARTIFACT}/target/${DEPLOYMENT_FILE_NAME}"
-                            cp ${env.PROJECT_ARTIFACT}/target/${DEPLOYMENT_FILE_NAME} /root/.customer-service-deploys/${DEPLOYMENT_FILE_NAME}
+                            cp ${env.PROJECT_ARTIFACT}/target/${DEPLOYMENT_FILE_NAME} /root/.customer-svc-deploys/${DEPLOYMENT_FILE_NAME}
                             kubectl apply -f ${env.PROJECT_ARTIFACT}/target/${DEPLOYMENT_FILE_NAME}
                         """
                     }

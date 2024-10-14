@@ -28,7 +28,7 @@ The project was bootstrapped using [Spring Initializer](https://start.spring.io/
 After cloning the repository, navigate to the root directory of the project and run the following command:
 
 ```bash
-./mvnw clean install -Pcustomer-service
+./mvnw clean install
 ```
 
 ## 2nd step
@@ -44,7 +44,7 @@ The customer service is the primary Spring application in this example. It relie
 To run the customer service, use the following command in another terminal:
 
 ```bash
-./mvnw -pl customer-service spring-boot:run
+./mvnw -pl customer-svc spring-boot:run
 ```
 
 ## Try it out
@@ -84,10 +84,10 @@ The PostgreSQL database is available at localhost:5432. For testing purposes, th
 
 The directories in this repository follow the structure of a [Multi Module Project for Spring Boot](https://spring.io/guides/gs/multi-module/):
 
-- The [common-library](./common-library/README.md) directory is a library module designed to share code across different services.
-- The [customer-service](./customer-service/README.md) directory is the main service of this repository, bootstrapped with the dependencies mentioned earlier.
+- The [common-lib](./common-lib/README.md) directory is a library module designed to share code across different services.
+- The [customer-svc](./customer-svc/README.md) directory is the main service of this repository, bootstrapped with the dependencies mentioned earlier.
 - The [docker](./docker) directory is not a Maven module. It contains the Dockerfile used to build images for the Jenkins pipeline and Docker Compose templates to run the required dependencies.
 
-Note: For more information about deployment using Jenkins, refer to the README file in the customer-service directory.
+Note: For more information about deployment using Jenkins, refer to the README file in the customer-svc directory.
 
 

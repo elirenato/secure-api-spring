@@ -2,7 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>customer-service</artifactId>
+    <artifactId>customer-svc</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
     <parent>
         <groupId>com.company.secureapispring</groupId>
         <artifactId>secure-api-spring-parent</artifactId>
@@ -37,11 +38,11 @@
         </dependency>
         <dependency>
             <groupId>com.company.secureapispring</groupId>
-            <artifactId>common-library</artifactId>
+            <artifactId>common-lib</artifactId>
         </dependency>
         <dependency>
             <groupId>com.company.secureapispring</groupId>
-            <artifactId>common-library</artifactId>
+            <artifactId>common-lib</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

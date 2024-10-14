@@ -23,8 +23,8 @@ Note: You can retrieve the kube config file by running the command `microk8s con
 Create a New Item of type `Pipeline Multibranch` in Jenkins.
 
 - In the Branch Sources section, select GitHub as the source.
-- In the Behaviors section, add the option `Filter by name (with regular expression)` and use `^(main)` as the regular expression.
-- Set the `Script Path` to `customer-service/src/main/jenkins/Jenkinsfile`.
+- In the Behaviors section, add the option `Filter by name (with regular expression)` and use `^(main|develop)` as the regular expression.
+- Set the `Script Path` to `customer-svc/src/main/jenkins/Jenkinsfile`.
 
 See the [Jenkinsfile](./Jenkinsfile) for more details.
 
