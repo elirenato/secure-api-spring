@@ -4,6 +4,7 @@ import com.company.secureapispring.customer.entities.Customer;
 import com.company.secureapispring.customer.repositories.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,9 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CustomerService {
-    private CustomerRepository customerRepository;
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
+    private final CustomerRepository customerRepository;
 
     public Customer create(Customer input) {
         Customer customer = new Customer();

@@ -36,11 +36,15 @@ public final class TestJWTUtils {
                     claims.put("realm_access", realmAccess);
                 })
                 .build();
-        JwsHeader jwsHeader = JwsHeader.with(() -> JWSAlgorithm.HS256.getName()).build();
+        JwsHeader jwsHeader = JwsHeader.with(JWSAlgorithm.HS256::getName).build();
         return JWT_ENCODER.encode(JwtEncoderParameters.from(jwsHeader, claimsSet)).getTokenValue();
     }
 
     public static Jwt decode(String jwtToken) {
         return JWT_DECODER.decode(jwtToken);
+    }
+
+    public static String getAuthHeader(String... roles) {
+        return "Bearer " + TestJWTUtils.encode(roles);
     }
 }

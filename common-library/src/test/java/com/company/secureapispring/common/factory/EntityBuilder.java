@@ -1,6 +1,6 @@
 package com.company.secureapispring.common.factory;
 
-import jakarta.persistence.EntityManager;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 public final class EntityBuilder<T> {
     private final Supplier<T> instantiation;
 
-    private List<Consumer<T>> instanceModifiers = new ArrayList<>();
+    private final List<Consumer<T>> instanceModifiers = new ArrayList<>();
 
     private EntityBuilder(Supplier<T> instantiation) {
         this.instantiation = instantiation;
@@ -27,29 +27,16 @@ public final class EntityBuilder<T> {
         return this;
     }
 
-    /**
-     * Create the entity with mock data but does not persist it
-     *
-     * @return
-     */
-    public T build() {
+    public T make() {
         T instance = instantiation.get();
         instanceModifiers.forEach(modifier -> modifier.accept(instance));
         instanceModifiers.clear();
         return instance;
     }
 
-    /**
-     * Create the entity with mock data and persist it
-     *
-     * @param em
-     * @return
-     */
-    public T build(EntityManager em) {
-        T value = build();
-        em.persist(value);
-        em.flush();
-        em.clear();
+    public <ID> T persit(JpaRepository<T, ID> repo) {
+        T value = make();
+        repo.save(value);
         return value;
     }
 }

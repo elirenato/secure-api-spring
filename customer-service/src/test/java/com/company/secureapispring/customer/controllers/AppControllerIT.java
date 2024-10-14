@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AppControllerIT extends AbstractIT {
-    private static String ENDPOINT = "/app";
+    private static final String ENDPOINT = "/app";
 
     @Autowired
     private MockMvc mockMvc;
@@ -18,7 +18,7 @@ public class AppControllerIT extends AbstractIT {
     @Test
     public void testGetAppBuild() throws Exception {
         mockMvc.perform(get(AppControllerIT.ENDPOINT + "/build")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TestJWTUtils.encode("any")))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("any")))
                 .andExpect(status().isOk());
     }
 }

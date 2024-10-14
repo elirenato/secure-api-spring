@@ -1,0 +1,11 @@
+# used to test the Docker image that will be used as Jenkins agent
+services:
+  jenkins_agent:
+    container_name: jenkins_agent
+    build:
+      context: '../..'
+      dockerfile: docker/jenkins/Dockerfile
+    tty: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../..:/opt/secure-api-spring

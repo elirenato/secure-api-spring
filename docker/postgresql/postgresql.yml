@@ -1,0 +1,16 @@
+# Make sure to use a strong password and harden the configuration in case you expose image outside your local machine
+services:
+  postgresql:
+    container_name: secure-api-spring-postgresql
+    build:
+      context: .
+      dockerfile: PostgreSQL.dockerfile
+    volumes:
+      - ${POSTGRES_DATA_DIR}:/var/lib/postgresql/data/
+    env_file:
+      - ../.env # copy the .env.example as change the password as you wish
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=password
+    ports:
+      - ${POSTGRES_PORT}
