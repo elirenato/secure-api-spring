@@ -16,6 +16,7 @@
         <testcontainers.version>1.19.8</testcontainers.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <common-lib.version>0.0.1-SNAPSHOT</common-lib.version>
     </properties>
     <dependencies>
         <dependency>
@@ -46,13 +47,13 @@
             </dependency>
             <dependency>
                 <groupId>com.company.secureapispring</groupId>
-                <artifactId>common-library</artifactId>
-                <version>${project.version}</version>
+                <artifactId>common-lib</artifactId>
+                <version>${common-lib.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.company.secureapispring</groupId>
-                <artifactId>common-library</artifactId>
-                <version>${project.version}</version>
+                <artifactId>common-lib</artifactId>
+                <version>${common-lib.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
@@ -101,16 +102,16 @@
     </build>
 
     <modules>
-        <module>common-library</module>
-        <module>customer-service</module>
+        <module>common-lib</module>
+        <module>customer-svc</module>
     </modules>
 
     <profiles>
         <profile>
-            <id>customer-service</id>
+            <id>customer-svc</id>
             <modules>
-                <module>common-library</module>
-                <module>customer-service</module>
+                <module>common-lib</module>
+                <module>customer-svc</module>
             </modules>
         </profile>
     </profiles>
