@@ -1,6 +1,6 @@
 package com.company.secureapispring.customer;
 
-import com.company.secureapispring.common.config.TestSecurityConfig;
+import com.company.secureapispring.auth.config.TestSecurityConfig;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.lang.annotation.ElementType;
@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@SpringBootTest(classes = {SecureApiSpringApp.class, TestSecurityConfig.class})
-public @interface SecureApiSpringIT {
+@SpringBootTest(classes = {CustomerSvcApp.class, TestSecurityConfig.class})
+public @interface CustomerSvcAppIT {
 }

@@ -1,17 +1,24 @@
 package com.company.secureapispring.customer.controllers;
 
-import com.company.secureapispring.customer.SecureApiSpringIT;
+import com.company.secureapispring.auth.entities.Organization;
+import com.company.secureapispring.auth.entities.User;
+import com.company.secureapispring.customer.CustomerSvcAppIT;
+import com.company.secureapispring.customer.factory.EntityFactory;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
-@SecureApiSpringIT
+@CustomerSvcAppIT
 @AutoConfigureMockMvc
 @Transactional
 public abstract class AbstractIT {
+
+  private User dechatedUser;
+  private Organization detachedOrganization;
 
   static final PostgreSQLContainer<?> dbContainer;
 
@@ -31,5 +38,19 @@ public abstract class AbstractIT {
     registry.add("spring.datasource.url", dbContainer::getJdbcUrl);
     registry.add("spring.datasource.password", dbContainer::getPassword);
     registry.add("spring.datasource.username", dbContainer::getUsername);
+  }
+
+  @BeforeEach
+  public void setup() {
+    this.dechatedUser = EntityFactory.user().make();
+    this.detachedOrganization = EntityFactory.organization().make();
+  }
+
+  protected User getDechatedUser() {
+    return this.dechatedUser;
+  }
+
+  protected Organization getDetachedOrganization() {
+    return this.detachedOrganization;
   }
 }

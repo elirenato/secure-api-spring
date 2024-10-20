@@ -1,7 +1,7 @@
 package com.company.secureapispring.customer.controllers;
 
+import com.company.secureapispring.common.exceptions.BadRequestException;
 import com.company.secureapispring.customer.entities.Customer;
-import com.company.secureapispring.customer.exceptions.BadRequestException;
 import com.company.secureapispring.customer.services.CustomerService;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

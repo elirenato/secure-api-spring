@@ -1,6 +1,11 @@
 #!/bin/bash
 set +x
 
+if [ "$#" -ne 3 ]; then
+  echo "Usage: $0 <DB_NAME> <DB_USERNAME> <DB_PASSWORD>"
+  exit 1
+fi
+
 DB_NAME=$1
 DB_USERNAME=$2
 DB_PASSWORD=$3

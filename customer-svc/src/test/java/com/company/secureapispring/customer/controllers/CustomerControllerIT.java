@@ -1,7 +1,10 @@
 package com.company.secureapispring.customer.controllers;
 
+import com.company.secureapispring.auth.entities.Organization;
+import com.company.secureapispring.auth.entities.User;
+import com.company.secureapispring.auth.repositories.OrganizationRepository;
+import com.company.secureapispring.auth.utils.TestJWTUtils;
 import com.company.secureapispring.common.factory.EntityBuilder;
-import com.company.secureapispring.common.utils.TestJWTUtils;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.Customer;
 import com.company.secureapispring.customer.entities.StateProvince;
@@ -47,29 +50,54 @@ public class CustomerControllerIT extends AbstractIT {
     @Autowired
     private CustomerRepository customerRepository;
 
-    private EntityBuilder<Customer> customerBuilder() {
+    @Autowired
+    private OrganizationRepository organizationRepository;
+
+    private StateProvince persistStateProvince() {
         Country country = EntityFactory
                 .country()
                 .persit(countryRepository);
-        StateProvince stateProvince = EntityFactory
+        return EntityFactory
                 .stateProvince()
                 .with(StateProvince::setCountry, country)
                 .persit(stateProvinceRepository);
+    }
+
+    private EntityBuilder<Customer> customerBuilder(StateProvince stateProvince) {
         return EntityFactory
                 .customer()
                 .with(Customer::setStateProvince, stateProvince);
     }
 
+    private Customer persistCustomer(Organization organization, StateProvince stateProvince) {
+        return customerBuilder(persistStateProvince())
+                .with(Customer::setOrganization, organization)
+                .with(Customer::setCreatedBy, this.getDechatedUser().getUsername())
+                .persit(this.customerRepository);
+    }
+
+    private Organization persistOrganization() {
+        return EntityFactory.organization().persit(this.organizationRepository);
+    }
+
     @Test
     public void testCreateWhenAuthorized() throws Exception {
-        Customer input = customerBuilder().make();
+        User user = EntityFactory.user().make();
+        Organization organization = EntityFactory.organization().make();
+        Customer input = customerBuilder(persistStateProvince()).make();
+
         MvcResult result = mockMvc.perform(post(CustomerControllerIT.ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                user,
+                                organization,
+                                "ROLE_ADMIN"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isCreated())
                 .andReturn();
+
         Long newId = objectMapper.readValue(result.getResponse().getContentAsString(), Customer.class).getId();
         Customer actual = customerRepository.getReferenceById(newId);
         assertEquals(input.getPostalCode(), actual.getPostalCode());
@@ -79,19 +107,28 @@ public class CustomerControllerIT extends AbstractIT {
         assertEquals(input.getAddress2(), actual.getAddress2());
         assertEquals(input.getEmail(), actual.getEmail());
         assertEquals(input.getStateProvince(), actual.getStateProvince());
+        assertEquals(user.getUsername(), actual.getCreatedBy());
+        assertEquals(organization, actual.getOrganization());
     }
 
     @Test
     public void testCreateWhenEmailAlreadyExists() throws Exception {
-        // create and persist a customer
-        Customer input = customerBuilder().persit(customerRepository);
+        StateProvince stateProvince = persistStateProvince();
+        Customer existentCustomer = persistCustomer(persistOrganization(), stateProvince);
 
         // set the id to null to try to create another customer with the same email
-        input.setId(null);
+        Customer input = EntityFactory.customer()
+                .with(Customer::setEmail, existentCustomer.getEmail())
+                .with(Customer::setStateProvince, stateProvince)
+                .make();
 
         String jsonResponse = mockMvc.perform(post(CustomerControllerIT.ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ADMIN"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isBadRequest())
@@ -104,8 +141,8 @@ public class CustomerControllerIT extends AbstractIT {
     }
 
     @Test
-    public void testCreateWhenInvalidStateProvince() throws Exception {
-        Customer input = customerBuilder().make();
+    public void testCreateWhenInvalidStateProvinceIdThenFailWithFK() throws Exception {
+        Customer input = customerBuilder(persistStateProvince()).make();
 
         StateProvince stateProvince = new StateProvince();
         stateProvince.setId(EntityFactory.getFaker().random().nextInt(100));
@@ -113,7 +150,11 @@ public class CustomerControllerIT extends AbstractIT {
 
         String jsonResponse = mockMvc.perform(post(CustomerControllerIT.ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ADMIN"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isBadRequest())
@@ -127,11 +168,15 @@ public class CustomerControllerIT extends AbstractIT {
 
     @Test
     public void testCreateWhenIdIsNotNullThenFail() throws Exception {
-        Customer input = customerBuilder().make();
+        Customer input = customerBuilder(persistStateProvince()).make();
         input.setId(EntityFactory.getFaker().number().randomNumber());
         mockMvc.perform(post(CustomerControllerIT.ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ADMIN"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isBadRequest())
@@ -143,7 +188,11 @@ public class CustomerControllerIT extends AbstractIT {
         Customer input = new Customer();
         mockMvc.perform(post(CustomerControllerIT.ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ADMIN"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isBadRequest())
@@ -157,11 +206,15 @@ public class CustomerControllerIT extends AbstractIT {
 
     @Test
     public void testCreateWhenEmailIsInvalidThenFail() throws Exception {
-        Customer input = customerBuilder().make();
+        Customer input = customerBuilder(persistStateProvince()).make();
         input.setEmail("email");
         mockMvc.perform(post(CustomerControllerIT.ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ADMIN"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isBadRequest())
@@ -170,20 +223,29 @@ public class CustomerControllerIT extends AbstractIT {
 
     @Test
     public void testCreateWhenForbiddenThenFail() throws Exception {
-        Customer input = customerBuilder().make();
+        Customer input = customerBuilder(persistStateProvince()).make();
         mockMvc.perform(post(CustomerControllerIT.ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ANALYST"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ANALYST"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void testGetWhenRegularUserAuthenticated() throws Exception {
-        Customer expected = customerBuilder().persit(this.customerRepository);
+    public void testGetWhenAnalystIsAuthenticated() throws Exception {
+        Organization organization = persistOrganization();
+        Customer expected = persistCustomer(organization, persistStateProvince());
         mockMvc.perform(get(CustomerControllerIT.ENDPOINT + "/" + expected.getId())
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ANALYST")))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                organization,
+                                "ROLE_ANALYST"
+                        )))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(expected.getId().intValue())))
                 .andExpect(jsonPath("firstName", is(expected.getFirstName())))
@@ -192,6 +254,22 @@ public class CustomerControllerIT extends AbstractIT {
                 .andExpect(jsonPath("address", is(expected.getAddress())))
                 .andExpect(jsonPath("postalCode", is(expected.getPostalCode())))
                 .andExpect(jsonPath("stateProvince.id", is(expected.getStateProvince().getId())));
+    }
+
+    @Test
+    public void testGetCustomerWhenBelongsToAnotherOrganization() throws Exception {
+        Organization organization = persistOrganization();
+        Customer expected = persistCustomer(organization, persistStateProvince());
+
+        Organization organization2 = persistOrganization();
+
+        mockMvc.perform(get(CustomerControllerIT.ENDPOINT + "/" + expected.getId())
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                organization2,
+                                "ROLE_ADMIN"
+                        )))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -205,22 +283,34 @@ public class CustomerControllerIT extends AbstractIT {
     public void testGetWhenNotFoundThenFail() throws Exception {
         int id = EntityFactory.getFaker().number().randomDigitNotZero();
         mockMvc.perform(get(CustomerControllerIT.ENDPOINT + "/" + id)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ANALYST")))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ANALYST"
+                        )))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void testUpdateWhenAuthorized() throws Exception {
-        Customer existent = customerBuilder().persit(this.customerRepository);
-        Customer input = customerBuilder().make();
+        Organization organization = persistOrganization();
+        StateProvince stateProvince = persistStateProvince();
+        Customer existent = persistCustomer(organization, stateProvince);
+        Customer input = customerBuilder(stateProvince).make();
         input.setId(existent.getId());
+
         MvcResult result = mockMvc.perform(put(CustomerControllerIT.ENDPOINT + "/" + existent.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                organization,
+                                "ROLE_ADMIN"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isOk())
                 .andReturn();
+
         Long newId = objectMapper.readValue(result.getResponse().getContentAsString(), Customer.class).getId();
         Customer actual = this.customerRepository.getReferenceById(newId);
         assertEquals(input.getPostalCode(), actual.getPostalCode());
@@ -233,21 +323,52 @@ public class CustomerControllerIT extends AbstractIT {
     }
 
     @Test
+    public void testUpdateWhenTheCustomerBelongsToAnotherOrganizationThenFail() throws Exception {
+        Organization organization = persistOrganization();
+        StateProvince stateProvince = persistStateProvince();
+        Customer existent = persistCustomer(organization, stateProvince);
+
+        Customer input = customerBuilder(stateProvince).make();
+        input.setId(existent.getId());
+
+        Organization organization2 = persistOrganization();
+
+        mockMvc.perform(put(CustomerControllerIT.ENDPOINT + "/" + existent.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                organization2,
+                                "ROLE_ADMIN"
+                        ))
+                        .content(objectMapper.writeValueAsString(input))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testUpdateWhenNotFoundThenFail() throws Exception {
         int id = EntityFactory.getFaker().number().randomDigitNotZero();
         mockMvc.perform(get(CustomerControllerIT.ENDPOINT + "/" + id)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN")))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ADMIN"
+                        )))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void testUpdateNewWhenIdIsDifferentThenFail() throws Exception {
-        Customer input = customerBuilder().make();
+        Customer input = customerBuilder(persistStateProvince()).make();
         input.setId(EntityFactory.getFaker().number().numberBetween(1001L, 2000L));
         long randomId = EntityFactory.getFaker().number().numberBetween(1L, 1000L);
         mockMvc.perform(put(CustomerControllerIT.ENDPOINT + "/" + randomId)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ADMIN"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isBadRequest())
@@ -260,19 +381,28 @@ public class CustomerControllerIT extends AbstractIT {
         input.setId(EntityFactory.getFaker().number().numberBetween(1001L, 2000L));
         mockMvc.perform(put(CustomerControllerIT.ENDPOINT + "/" + input.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ADMIN"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isBadRequest());
     }
 
+    // only admin can update
     @Test
-    public void testUpdateWhenForbiddenThenFail() throws Exception {
-        Customer input = customerBuilder().make();
+    public void testUpdateWhenAnalystTryToUpdateThenFail() throws Exception {
+        Customer input = customerBuilder(persistStateProvince()).make();
         input.setId(EntityFactory.getFaker().number().numberBetween(1001L, 2000L));
         mockMvc.perform(put(CustomerControllerIT.ENDPOINT + "/" + input.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ANALYST"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ANALYST"
+                        ))
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isForbidden());
@@ -280,9 +410,15 @@ public class CustomerControllerIT extends AbstractIT {
 
     @Test
     public void testDeleteWhenAuthorized() throws Exception {
-        Customer entity = customerBuilder().persit(customerRepository);
+        Organization organization = persistOrganization();
+        StateProvince stateProvince = persistStateProvince();
+        Customer entity = persistCustomer(organization, stateProvince);
         mockMvc.perform(delete(CustomerControllerIT.ENDPOINT + "/" + entity.getId())
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN"))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                organization,
+                                "ROLE_ADMIN"
+                        ))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(entity.getId().intValue())))
@@ -295,39 +431,79 @@ public class CustomerControllerIT extends AbstractIT {
     }
 
     @Test
-    public void testDeleteWhenNotFoundThenFail() throws Exception {
-        int id = EntityFactory.getFaker().number().randomDigitNotZero();
-        mockMvc.perform(delete(CustomerControllerIT.ENDPOINT + "/" + id)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ADMIN")))
-                .andExpect(status().isNotFound());
-    }
+    public void testDeleteWhenCustomerBelongsToAnotherOrganizationThenFail() throws Exception {
+        Organization organization = persistOrganization();
+        StateProvince stateProvince = persistStateProvince();
+        Customer entity = persistCustomer(organization, stateProvince);
 
-    @Test
-    public void testDeleteWhenForbiddenThenFail() throws Exception {
-        int id = EntityFactory.getFaker().number().randomDigitNotZero();
-        mockMvc.perform(delete(CustomerControllerIT.ENDPOINT + "/" + id)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ANALYST"))
+        Organization organization2 = persistOrganization();
+
+        mockMvc.perform(delete(CustomerControllerIT.ENDPOINT + "/" + entity.getId())
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                organization2,
+                                "ROLE_ADMIN"
+                        ))
                 )
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void testListAllWhenAuthenticated() throws Exception {
-        List<Customer> expectedCustomers = IntStream
-                .range(1, EntityFactory.getFaker().number().numberBetween(1, 10))
-                .mapToObj(n -> customerBuilder().persit(this.customerRepository)
+    public void testDeleteWhenNotFoundThenFail() throws Exception {
+        int id = EntityFactory.getFaker().number().randomDigitNotZero();
+        mockMvc.perform(delete(CustomerControllerIT.ENDPOINT + "/" + id)
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ADMIN"
+                        )))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testDeleteWhenAnalystTryToDeleteThenFail() throws Exception {
+        int id = EntityFactory.getFaker().number().randomDigitNotZero();
+        mockMvc.perform(delete(CustomerControllerIT.ENDPOINT + "/" + id)
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "ROLE_ANALYST"
+                        ))
                 )
+                .andExpect(status().isForbidden());
+    }
+
+    private List<Customer> persistCustomers(Organization organization, StateProvince stateProvince) {
+        return IntStream
+                .range(1, EntityFactory.getFaker().number().numberBetween(1, 5))
+                .mapToObj(n -> persistCustomer(organization, stateProvince))
                 .sorted(Comparator
                         .comparing(Customer::getLastName)
                         .thenComparing(Customer::getFirstName)
                 )
                 .toList();
+    }
+
+    @Test
+    public void testListAllWhenAuthenticated() throws Exception {
+        Organization organization1 = persistOrganization();
+        StateProvince stateProvince = persistStateProvince();
+        List<Customer> customersOfOrganization1 = persistCustomers(organization1, stateProvince);
+
+        // the customer of organization2 should not be listed
+        Organization organization2 = persistOrganization();
+        persistCustomers(organization2, stateProvince);
 
         mockMvc.perform(get(CustomerControllerIT.ENDPOINT)
-                .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("ROLE_ANALYST")))
+                .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                        this.getDechatedUser(),
+                        organization1,
+                        "ROLE_ANALYST"
+                )))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(expectedCustomers.size())))
+                .andExpect(jsonPath("$", hasSize(customersOfOrganization1.size())))
                 .andExpect(jsonPath("$[*].stateProvince", is(empty())))
+                .andExpect(jsonPath("$[*].organization.id", everyItem(is(organization1.getId()))))
                 .andReturn().getResponse().getContentAsString();
     }
 

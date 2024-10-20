@@ -1,6 +1,6 @@
 package com.company.secureapispring.customer.controllers;
 
-import com.company.secureapispring.common.utils.TestJWTUtils;
+import com.company.secureapispring.auth.utils.TestJWTUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +18,11 @@ public class AppControllerIT extends AbstractIT {
     @Test
     public void testGetAppBuild() throws Exception {
         mockMvc.perform(get(AppControllerIT.ENDPOINT + "/build")
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("any")))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "any"
+                        )))
                 .andExpect(status().isOk());
     }
 }

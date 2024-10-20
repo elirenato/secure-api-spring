@@ -6,7 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity(name = "state_provinces")
+@Entity
+@Table(name = "state_provinces")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 public class StateProvince {

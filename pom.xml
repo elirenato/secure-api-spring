@@ -17,6 +17,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <common-lib.version>0.0.1-SNAPSHOT</common-lib.version>
+        <auth-lib.version>0.0.1-SNAPSHOT</auth-lib.version>
     </properties>
     <dependencies>
         <dependency>
@@ -54,6 +55,18 @@
                 <groupId>com.company.secureapispring</groupId>
                 <artifactId>common-lib</artifactId>
                 <version>${common-lib.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.company.secureapispring</groupId>
+                <artifactId>auth-lib</artifactId>
+                <version>${auth-lib.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.company.secureapispring</groupId>
+                <artifactId>auth-lib</artifactId>
+                <version>${auth-lib.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
@@ -103,6 +116,7 @@
 
     <modules>
         <module>common-lib</module>
+        <module>auth-lib</module>
         <module>customer-svc</module>
     </modules>
 
@@ -111,6 +125,7 @@
             <id>customer-svc</id>
             <modules>
                 <module>common-lib</module>
+                <module>auth-lib</module>
                 <module>customer-svc</module>
             </modules>
         </profile>

@@ -1,4 +1,4 @@
-package com.company.secureapispring.customer.exceptions;
+package com.company.secureapispring.common.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

@@ -29,13 +29,15 @@
             <column name="name" type="string"/>
         </loadData>
         <sql splitStatements="false" endDelimiter="$$">
-            DO $$
-            DECLARE
-                max_id INTEGER;
-            BEGIN
-                SELECT COALESCE(MAX(id), 0) INTO max_id FROM countries;
-                EXECUTE 'ALTER SEQUENCE countries_id_seq RESTART WITH ' || (max_id + 1);
-            END $$;
+            <![CDATA[
+                DO $$
+                DECLARE
+                    max_id INTEGER;
+                BEGIN
+                    SELECT COALESCE(MAX(id), 0) INTO max_id FROM countries;
+                    EXECUTE 'ALTER SEQUENCE countries_id_seq RESTART WITH ' || (max_id + 1);
+                END $$;
+            ]]>
         </sql>
     </changeSet>
     <changeSet id="000003" author="admin">
@@ -75,13 +77,15 @@
             <column name="country_id" type="numeric"/>
         </loadData>
         <sql splitStatements="false" endDelimiter="$$">
-            DO $$
-            DECLARE
-                max_id INTEGER;
-            BEGIN
-                SELECT COALESCE(MAX(id), 0) INTO max_id FROM state_provinces;
-                EXECUTE 'ALTER SEQUENCE state_provinces_id_seq RESTART WITH ' || (max_id + 1);
-            END $$;
+            <![CDATA[
+                DO $$
+                DECLARE
+                    max_id INTEGER;
+                BEGIN
+                    SELECT COALESCE(MAX(id), 0) INTO max_id FROM state_provinces;
+                    EXECUTE 'ALTER SEQUENCE state_provinces_id_seq RESTART WITH ' || (max_id + 1);
+                END $$;
+            ]]>
         </sql>
     </changeSet>
     <changeSet id="000005" author="admin">
@@ -108,11 +112,29 @@
             <column name="state_province_id" type="int">
                 <constraints nullable="false"/>
             </column>
+            <column name="organization_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Abstract auditing fields -->
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="timestamp"/>
+            <column name="last_modified_by" type="varchar(255)"/>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="state_province_id"
                                  baseTableName="customers"
                                  constraintName="fk_state_province_id"
                                  referencedColumnNames="id"
                                  referencedTableName="state_provinces"/>
+        <addForeignKeyConstraint baseColumnNames="organization_id"
+                                 baseTableName="customers"
+                                 constraintName="fk_organization_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="organizations"
+                                 onDelete="CASCADE"/>
     </changeSet>
 </databaseChangeLog>

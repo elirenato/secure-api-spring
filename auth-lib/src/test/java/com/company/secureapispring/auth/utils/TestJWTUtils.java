@@ -1,5 +1,7 @@
-package com.company.secureapispring.common.utils;
+package com.company.secureapispring.auth.utils;
 
+import com.company.secureapispring.auth.entities.Organization;
+import com.company.secureapispring.auth.entities.User;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -8,6 +10,7 @@ import org.springframework.security.oauth2.jwt.*;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,12 +30,18 @@ public final class TestJWTUtils {
 
     private TestJWTUtils() {}
 
-    public static String encode(String... roles) {
-        Map<String, Object> realmAccess = new HashMap<>();
-        realmAccess.put("roles", roles);
+    public static String encode(User user, Organization organization, String... roles) {
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("http://localhost:8080/realms/app")
                 .claims(claims -> {
+                    Map<String, Object> realmAccess = new HashMap<>();
+                    realmAccess.put("roles", roles);
+                    claims.put("given_name", user.getGivenName());
+                    claims.put("family_name", user.getFamilyName());
+                    claims.put("preferred_username", user.getUsername());
+                    claims.put("email", user.getEmail());
+                    claims.put("email_verified", user.isEmailVerified());
+                    claims.put("organization", Collections.singletonList(organization.getAlias()));
                     claims.put("realm_access", realmAccess);
                 })
                 .build();
@@ -44,7 +53,7 @@ public final class TestJWTUtils {
         return JWT_DECODER.decode(jwtToken);
     }
 
-    public static String getAuthHeader(String... roles) {
-        return "Bearer " + TestJWTUtils.encode(roles);
+    public static String getAuthHeader(User user, Organization organization, String... roles) {
+        return "Bearer " + TestJWTUtils.encode(user, organization, roles);
     }
 }

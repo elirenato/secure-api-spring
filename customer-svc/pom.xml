@@ -47,6 +47,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.company.secureapispring</groupId>
+            <artifactId>auth-lib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.company.secureapispring</groupId>
+            <artifactId>auth-lib</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
             <scope>test</scope>

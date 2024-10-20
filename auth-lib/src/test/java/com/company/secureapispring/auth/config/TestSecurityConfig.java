@@ -1,6 +1,6 @@
-package com.company.secureapispring.common.config;
+package com.company.secureapispring.auth.config;
 
-import com.company.secureapispring.common.utils.TestJWTUtils;
+import com.company.secureapispring.auth.utils.TestJWTUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 
