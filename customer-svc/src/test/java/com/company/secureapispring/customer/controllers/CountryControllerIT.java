@@ -2,6 +2,8 @@ package com.company.secureapispring.customer.controllers;
 
 
 import com.company.secureapispring.auth.utils.TestJWTUtils;
+import com.company.secureapispring.customer.AbstractIT;
+import com.company.secureapispring.customer.CustomerSvcAppIT;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.StateProvince;
 import com.company.secureapispring.customer.factory.EntityFactory;
@@ -9,8 +11,10 @@ import com.company.secureapispring.customer.repositories.CountryRepository;
 import com.company.secureapispring.customer.repositories.StateProvinceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc
+@CustomerSvcAppIT
+@Transactional
 public class CountryControllerIT extends AbstractIT {
 
     private static final String ENDPOINT = "/countries";

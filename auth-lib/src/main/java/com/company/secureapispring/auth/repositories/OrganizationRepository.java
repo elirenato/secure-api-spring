@@ -9,6 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
-    // TODO: Cache this method
     Optional<Organization> findByAlias(@Param("alias") String alias);
 }

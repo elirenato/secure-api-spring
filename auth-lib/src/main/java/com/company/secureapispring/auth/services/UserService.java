@@ -1,9 +1,11 @@
 package com.company.secureapispring.auth.services;
 
+import com.company.secureapispring.auth.constants.CacheName;
 import com.company.secureapispring.auth.entities.User;
 import com.company.secureapispring.auth.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Cacheable(cacheNames = CacheName.USER_BY_USERNAME)
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }

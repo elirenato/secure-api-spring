@@ -37,6 +37,10 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.company.secureapispring</groupId>
             <artifactId>common-lib</artifactId>
         </dependency>
@@ -57,8 +61,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -85,6 +89,19 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- Hibernate 2nd level cache -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-hibernate-6</artifactId>
         </dependency>
     </dependencies>
 

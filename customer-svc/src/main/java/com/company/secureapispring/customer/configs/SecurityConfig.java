@@ -2,7 +2,7 @@ package com.company.secureapispring.customer.configs;
 
 import com.company.secureapispring.common.audit.AuditAwareImpl;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @EnableJpaAuditing
+@EnableCaching
 public class SecurityConfig {
 
     private final String[] allowedOrigins;

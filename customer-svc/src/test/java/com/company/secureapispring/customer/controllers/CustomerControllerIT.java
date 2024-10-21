@@ -5,6 +5,8 @@ import com.company.secureapispring.auth.entities.User;
 import com.company.secureapispring.auth.repositories.OrganizationRepository;
 import com.company.secureapispring.auth.utils.TestJWTUtils;
 import com.company.secureapispring.common.factory.EntityBuilder;
+import com.company.secureapispring.customer.AbstractIT;
+import com.company.secureapispring.customer.CustomerSvcAppIT;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.Customer;
 import com.company.secureapispring.customer.entities.StateProvince;
@@ -15,11 +17,13 @@ import com.company.secureapispring.customer.repositories.StateProvinceRepository
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +35,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc
+@CustomerSvcAppIT
+@Transactional
 public class CustomerControllerIT extends AbstractIT {
 
     private static final String ENDPOINT = "/customers";
@@ -70,7 +77,7 @@ public class CustomerControllerIT extends AbstractIT {
     }
 
     private Customer persistCustomer(Organization organization, StateProvince stateProvince) {
-        return customerBuilder(persistStateProvince())
+        return customerBuilder(stateProvince)
                 .with(Customer::setOrganization, organization)
                 .with(Customer::setCreatedBy, this.getDechatedUser().getUsername())
                 .persit(this.customerRepository);

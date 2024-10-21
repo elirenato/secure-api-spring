@@ -1,0 +1,25 @@
+# Config reference
+# https://redisson.org/docs/configuration/
+singleServerConfig:
+  idleConnectionTimeout: 10000
+  connectTimeout: 10000
+  timeout: 3000
+  retryAttempts: 3
+  retryInterval: 1500
+  password: null
+  subscriptionsPerConnection: 5
+  clientName: null
+  address: "redis://${REDIS_HOST_PORT:-localhost:6379}"
+  subscriptionConnectionMinimumIdleSize: 1
+  subscriptionConnectionPoolSize: ${REDIS_CONNECTION_POOL_SIZE:-5}
+  connectionMinimumIdleSize: ${REDIS_CONNECTION_MINIMUM_IDLE_SIZE:-2}
+  connectionPoolSize: ${REDIS_CONNECTION_POOL_SIZE:-10}
+  database: ${REDIS_DATABASE:-0}
+  dnsMonitoringInterval: 5000
+threads: ${REDIS_THREADS:-4}
+nettyThreads: ${REDIS_NETTY_THREADS:-8}
+# https://redisson.org/docs/data-and-services/data-serialization/
+codec: !<org.redisson.codec.SerializationCodec> {}
+# codec: !<org.redisson.codec.JsonJacksonCodec> {}
+transportMode: "NIO"
+

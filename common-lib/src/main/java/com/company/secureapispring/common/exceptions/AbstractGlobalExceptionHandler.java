@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class AbstractErrorHandler extends ResponseEntityExceptionHandler {
+public abstract class AbstractGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     protected abstract String getMessage(String constraintName, DataIntegrityViolationException ex);
 

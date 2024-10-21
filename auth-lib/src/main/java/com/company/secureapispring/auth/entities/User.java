@@ -3,7 +3,8 @@ package com.company.secureapispring.auth.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cache;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "users")
+@Cache(region = "users", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User implements Serializable {
 
     @Serial

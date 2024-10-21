@@ -6,12 +6,12 @@ import com.company.secureapispring.common.factory.EntityBuilder;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.Customer;
 import com.company.secureapispring.customer.entities.StateProvince;
-import com.github.javafaker.Faker;
 import lombok.Getter;
+import net.datafaker.Faker;
 
 public final class EntityFactory {
     @Getter
-    private static final Faker faker = Faker.instance();
+    private static final Faker faker = new Faker();
     private static int counter;
 
     private EntityFactory() {

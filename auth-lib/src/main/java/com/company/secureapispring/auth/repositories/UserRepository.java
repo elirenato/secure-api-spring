@@ -9,6 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    // TODO: Cache this method
     Optional<User> findByUsername(@Param("username") String username);
 }

@@ -1,9 +1,11 @@
 package com.company.secureapispring.auth.services;
 
+import com.company.secureapispring.auth.constants.CacheName;
 import com.company.secureapispring.auth.entities.Organization;
 import com.company.secureapispring.auth.repositories.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
 
+    @Cacheable(cacheNames = CacheName.ORG_BY_ALIAS)
     public Optional<Organization> findByAlias(String alias) {
         return organizationRepository.findByAlias(alias);
     }

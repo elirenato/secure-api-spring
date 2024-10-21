@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@SpringBootTest(classes = {CustomerSvcApp.class, TestSecurityConfig.class})
+@SpringBootTest(classes = {TestRedisConfiguration.class, TestSecurityConfig.class, CustomerSvcApp.class})
 public @interface CustomerSvcAppIT {
 }

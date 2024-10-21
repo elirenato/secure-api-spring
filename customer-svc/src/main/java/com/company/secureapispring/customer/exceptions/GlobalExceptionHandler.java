@@ -1,13 +1,13 @@
 package com.company.secureapispring.customer.exceptions;
 
-import com.company.secureapispring.common.exceptions.AbstractErrorHandler;
+import com.company.secureapispring.common.exceptions.AbstractGlobalExceptionHandler;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Log4j2
 @RestControllerAdvice
-public class GlobalExceptionHandler extends AbstractErrorHandler {
+public class GlobalExceptionHandler extends AbstractGlobalExceptionHandler {
     @Override
     protected String getMessage(String constraintName, DataIntegrityViolationException ex) {
         String message;
