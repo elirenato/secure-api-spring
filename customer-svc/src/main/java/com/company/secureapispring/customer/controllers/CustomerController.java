@@ -1,7 +1,7 @@
 package com.company.secureapispring.customer.controllers;
 
-import com.company.secureapispring.common.exceptions.BadRequestException;
 import com.company.secureapispring.customer.entities.Customer;
+import com.company.secureapispring.customer.exceptions.BadRequestException;
 import com.company.secureapispring.customer.services.CustomerService;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;

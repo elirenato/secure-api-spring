@@ -1,4 +1,4 @@
-package com.company.secureapispring.common.audit;
+package com.company.secureapispring.customer.entities;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;

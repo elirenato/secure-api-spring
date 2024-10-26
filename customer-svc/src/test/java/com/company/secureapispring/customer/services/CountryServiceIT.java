@@ -1,7 +1,7 @@
 package com.company.secureapispring.customer.services;
 
 import com.company.secureapispring.customer.AbstractIT;
-import com.company.secureapispring.customer.CustomerSvcAppIT;
+import com.company.secureapispring.customer.CustomerSvcSpringBootAppTest;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.factory.EntityFactory;
 import com.company.secureapispring.customer.repositories.CountryRepository;
@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-@CustomerSvcAppIT
+@CustomerSvcSpringBootAppTest
 @Transactional
 public class CountryServiceIT extends AbstractIT {
     @Autowired

@@ -2,12 +2,13 @@ package com.company.secureapispring.customer.factory;
 
 import com.company.secureapispring.auth.entities.Organization;
 import com.company.secureapispring.auth.entities.User;
-import com.company.secureapispring.common.factory.EntityBuilder;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.Customer;
 import com.company.secureapispring.customer.entities.StateProvince;
 import lombok.Getter;
 import net.datafaker.Faker;
+
+import java.time.Instant;
 
 public final class EntityFactory {
     @Getter
@@ -64,6 +65,8 @@ public final class EntityFactory {
         String username = email.substring(0, email.indexOf("@"));
         return EntityBuilder
                 .of(Organization::new)
-                .with(Organization::setAlias, username);
+                .with(Organization::setAlias, faker.internet().uuid())
+                .with(Organization::setCreatedBy, username)
+                .with(Organization::setCreatedDate, Instant.now());
     }
 }

@@ -23,7 +23,7 @@ public class CustomerService {
     public Customer create(Customer input) {
         Customer customer = new Customer();
         BeanUtils.copyProperties(input, customer);
-        authService.setOrganization(customer);
+        authService.setAuthOrganization(customer);
         return customerRepository.save(customer);
     }
 
@@ -49,7 +49,7 @@ public class CustomerService {
     }
 
     public List<Customer> listAll() {
-        Organization organization = authService.getAuthenticatedOrganization();
+        Organization organization = authService.getAuthInfo().organization();
         return customerRepository.findAllByOrganizationId(organization.getId(), Sort.by("lastName", "firstName"));
     }
 }

@@ -1,9 +1,9 @@
 package com.company.secureapispring.customer.controllers;
 
 
-import com.company.secureapispring.auth.utils.TestJWTUtils;
 import com.company.secureapispring.customer.AbstractIT;
-import com.company.secureapispring.customer.CustomerSvcAppIT;
+import com.company.secureapispring.customer.CustomerSvcSpringBootAppTest;
+import com.company.secureapispring.customer.TestJWTUtils;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.StateProvince;
 import com.company.secureapispring.customer.factory.EntityFactory;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@CustomerSvcAppIT
+@CustomerSvcSpringBootAppTest
 @Transactional
 public class CountryControllerIT extends AbstractIT {
 

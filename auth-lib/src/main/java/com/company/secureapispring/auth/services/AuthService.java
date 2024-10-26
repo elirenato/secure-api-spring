@@ -1,5 +1,6 @@
 package com.company.secureapispring.auth.services;
 
+import com.company.secureapispring.auth.AuthInfo;
 import com.company.secureapispring.auth.entities.Organization;
 import com.company.secureapispring.auth.entities.User;
 import com.company.secureapispring.auth.interfaces.HasOrganization;
@@ -10,6 +11,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -37,15 +39,15 @@ public class AuthService {
                         updated = true;
                     }
                     if (updated) {
-                        return userService.syncUser(user, detachedUser);
+                        return userService.sync(user, detachedUser);
                     } else {
                         return user;
                     }
                 })
-                .orElseGet(() -> userService.syncUser(new User(), detachedUser));
+                .orElseGet(() -> userService.sync(new User(), detachedUser));
     }
 
-    private Organization extractOrganization(Map<String, Object> attrs) {
+    private Organization extractOrganization(Map<String, Object> attrs, User authUser) {
         List<String> organizations = (List<String>) attrs.get("organization");
         if (organizations == null || organizations.isEmpty()) {
             throw new AccessDeniedException("Authentication does not have organization token.");
@@ -56,46 +58,31 @@ public class AuthService {
         Organization detachedOrganization = new Organization();
         detachedOrganization.setAlias(organizations.getFirst());
         return organizationService.findByAlias(detachedOrganization.getAlias())
-                .map(organization -> {
-                    boolean updated = !organization.getAlias().equals(detachedOrganization.getAlias());
-                    if (updated) {
-                        return organizationService.sync(organization, detachedOrganization);
-                    } else {
-                        return organization;
-                    }
-                })
-                .orElseGet(() -> organizationService.sync(new Organization(), detachedOrganization));
+                .orElseGet(() -> {
+                    detachedOrganization.setCreatedDate(Instant.now());
+                    detachedOrganization.setCreatedBy(authUser.getUsername());
+                    return organizationService.sync(new Organization(), detachedOrganization);
+                });
     }
 
-    private AuthenticatedToken getAuthInfo() {
+    public AuthInfo getAuthInfo() {
         JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         if (jwtAuthenticationToken == null) {
             throw new AccessDeniedException("Not authenticated.");
         }
         Map<String, Object> attrs = jwtAuthenticationToken.getTokenAttributes();
         User authUser = extractUser(attrs);
-        Organization authOrganization = extractOrganization(attrs);
-        return new AuthenticatedToken(authUser, authOrganization);
+        Organization authOrganization = extractOrganization(attrs, authUser);
+        return new AuthInfo(authUser, authOrganization);
     }
 
-    public Organization getAuthenticatedOrganization() {
-        return getAuthInfo().organization;
-    }
-
-    public User getAuthenticatedUser() {
-        return getAuthInfo().user;
-    }
-
-    public void setOrganization(HasOrganization entity) {
-        entity.setOrganization(getAuthenticatedOrganization());
+    public void setAuthOrganization(HasOrganization entity) {
+        entity.setOrganization(getAuthInfo().organization());
     }
 
     public void validateOwnership(HasOrganization entity) {
         if (!getAuthInfo().organization().equals(entity.getOrganization())) {
             throw new AccessDeniedException("The record does not belongs to your organization.");
         }
-    }
-
-    public record AuthenticatedToken(User user, Organization organization) {
     }
 }

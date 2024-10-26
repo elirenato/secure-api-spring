@@ -8,20 +8,19 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
-        "com.company.secureapispring.common",
-        "com.company.secureapispring.customer",
         "com.company.secureapispring.auth",
+        "com.company.secureapispring.customer",
 })
 @EnableJpaRepositories(
         basePackages = {
-                "com.company.secureapispring.customer",
                 "com.company.secureapispring.auth",
+                "com.company.secureapispring.customer",
         }
 )
 @EntityScan(
         basePackages = {
-                "com.company.secureapispring.customer",
                 "com.company.secureapispring.auth",
+                "com.company.secureapispring.customer",
         }
 )
 public class CustomerSvcApp {

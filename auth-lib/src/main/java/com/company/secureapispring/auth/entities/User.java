@@ -3,10 +3,14 @@ package com.company.secureapispring.auth.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
@@ -18,7 +22,6 @@ public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -30,6 +33,7 @@ public class User implements Serializable {
     @Column(name = "family_name")
     private String familyName;
 
+    @EqualsAndHashCode.Include
     @Column(unique = true, nullable = false)
     private String username;
 
@@ -38,4 +42,12 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private boolean emailVerified = false;
+
+    @CreatedDate
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private Instant createdDate = Instant.now();
+
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
 }

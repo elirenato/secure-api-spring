@@ -15,7 +15,7 @@ import java.util.List;
 public class StateProvinceService {
     private final StateProvinceRepository stateProvinceRepository;
 
-    @Cacheable(cacheNames = CacheName.ALL_STATE_PROVINCES)
+    @Cacheable(cacheNames = CacheName.ALL_STATE_PROVINCES, unless = "#result == null")
     public List<StateProvince> findAll(Integer countryId) {
         return stateProvinceRepository.findAllByCountryId(countryId, Sort.by("name"));
     }

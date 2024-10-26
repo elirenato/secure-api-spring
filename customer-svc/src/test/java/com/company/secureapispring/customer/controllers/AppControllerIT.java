@@ -1,9 +1,8 @@
 package com.company.secureapispring.customer.controllers;
 
-import com.company.secureapispring.auth.utils.TestJWTUtils;
 import com.company.secureapispring.customer.AbstractIT;
-import com.company.secureapispring.customer.CustomerSvcAppIT;
-import jakarta.transaction.Transactional;
+import com.company.secureapispring.customer.CustomerSvcSpringBootAppTest;
+import com.company.secureapispring.customer.TestJWTUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@CustomerSvcAppIT
+@CustomerSvcSpringBootAppTest
 public class AppControllerIT extends AbstractIT {
     private static final String ENDPOINT = "/app";
 

@@ -3,13 +3,13 @@ package com.company.secureapispring.customer.controllers;
 import com.company.secureapispring.auth.entities.Organization;
 import com.company.secureapispring.auth.entities.User;
 import com.company.secureapispring.auth.repositories.OrganizationRepository;
-import com.company.secureapispring.auth.utils.TestJWTUtils;
-import com.company.secureapispring.common.factory.EntityBuilder;
 import com.company.secureapispring.customer.AbstractIT;
-import com.company.secureapispring.customer.CustomerSvcAppIT;
+import com.company.secureapispring.customer.CustomerSvcSpringBootAppTest;
+import com.company.secureapispring.customer.TestJWTUtils;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.Customer;
 import com.company.secureapispring.customer.entities.StateProvince;
+import com.company.secureapispring.customer.factory.EntityBuilder;
 import com.company.secureapispring.customer.factory.EntityFactory;
 import com.company.secureapispring.customer.repositories.CountryRepository;
 import com.company.secureapispring.customer.repositories.CustomerRepository;
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@CustomerSvcAppIT
+@CustomerSvcSpringBootAppTest
 @Transactional
 public class CustomerControllerIT extends AbstractIT {
 

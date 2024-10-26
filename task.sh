@@ -31,6 +31,11 @@ case $1 in
     "docker:jenkins:bash")
         docker exec -it jenkins_agent bash
         ;;
+    "auth-lib:test-report")
+        ./mvnw -pl auth-lib jacoco:report
+        echo -e "\nClick in the link below to open the report on the default browser:\n"
+        echo -e "file://$(pwd)/auth-lib/target/site/jacoco/index.html\n"
+        ;;
     *)
         echo "Invalid task name: $1. Please provide a valid task name."
         ;;

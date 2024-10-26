@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>customer-svc</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <parent>
         <groupId>com.company.secureapispring</groupId>
         <artifactId>secure-api-spring-parent</artifactId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <dependencies>
         <dependency>
@@ -42,23 +42,7 @@
         </dependency>
         <dependency>
             <groupId>com.company.secureapispring</groupId>
-            <artifactId>common-lib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.company.secureapispring</groupId>
-            <artifactId>common-lib</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.company.secureapispring</groupId>
             <artifactId>auth-lib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.company.secureapispring</groupId>
-            <artifactId>auth-lib</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.datafaker</groupId>
@@ -89,6 +73,10 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

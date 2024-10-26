@@ -17,7 +17,7 @@ import java.util.List;
 public class CountryService {
     private final CountryRepository countryRepository;
 
-    @Cacheable(cacheNames = CacheName.ALL_COUNTRIES)
+    @Cacheable(cacheNames = CacheName.ALL_COUNTRIES, unless = "#result == null")
     public List<Country> findAll() {
         return countryRepository.findAll(Sort.by("name"));
     }

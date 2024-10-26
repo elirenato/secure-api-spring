@@ -1,4 +1,4 @@
-package com.company.secureapispring.common.factory;
+package com.company.secureapispring.customer.factory;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

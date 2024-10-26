@@ -1,4 +1,4 @@
-package com.company.secureapispring.common.audit;
+package com.company.secureapispring.customer.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
