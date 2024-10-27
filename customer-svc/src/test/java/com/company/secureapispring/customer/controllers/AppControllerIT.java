@@ -1,14 +1,19 @@
 package com.company.secureapispring.customer.controllers;
 
-import com.company.secureapispring.common.utils.TestJWTUtils;
+import com.company.secureapispring.customer.AbstractIT;
+import com.company.secureapispring.customer.CustomerSvcSpringBootAppTest;
+import com.company.secureapispring.customer.TestJWTUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc
+@CustomerSvcSpringBootAppTest
 public class AppControllerIT extends AbstractIT {
     private static final String ENDPOINT = "/app";
 
@@ -18,7 +23,11 @@ public class AppControllerIT extends AbstractIT {
     @Test
     public void testGetAppBuild() throws Exception {
         mockMvc.perform(get(AppControllerIT.ENDPOINT + "/build")
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("any")))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "any"
+                        )))
                 .andExpect(status().isOk());
     }
 }

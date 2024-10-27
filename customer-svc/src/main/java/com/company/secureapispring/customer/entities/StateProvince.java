@@ -6,10 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity(name = "state_provinces")
+import java.io.Serializable;
+
+@Entity
+@Table(name = "state_provinces")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
-public class StateProvince {
+public class StateProvince implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include

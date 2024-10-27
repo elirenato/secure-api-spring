@@ -1,15 +1,18 @@
 package com.company.secureapispring.customer.factory;
 
-import com.company.secureapispring.common.factory.EntityBuilder;
+import com.company.secureapispring.auth.entities.Organization;
+import com.company.secureapispring.auth.entities.User;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.Customer;
 import com.company.secureapispring.customer.entities.StateProvince;
-import com.github.javafaker.Faker;
 import lombok.Getter;
+import net.datafaker.Faker;
+
+import java.time.Instant;
 
 public final class EntityFactory {
     @Getter
-    private static final Faker faker = Faker.instance();
+    private static final Faker faker = new Faker();
     private static int counter;
 
     private EntityFactory() {
@@ -43,5 +46,27 @@ public final class EntityFactory {
                 .with(Customer::setAddress, faker.address().streetAddressNumber())
                 .with(Customer::setAddress2, faker.address().secondaryAddress())
                 .with(Customer::setPostalCode, faker.address().zipCode());
+    }
+
+    public static EntityBuilder<User> user() {
+        String email = generateUniqueEmail();
+        String username = email.substring(0, email.indexOf("@"));
+        return EntityBuilder
+                .of(User::new)
+                .with(User::setGivenName, faker.name().firstName())
+                .with(User::setFamilyName, faker.name().lastName())
+                .with(User::setEmail, email)
+                .with(User::setEmailVerified, true)
+                .with(User::setUsername, username);
+    }
+
+    public static EntityBuilder<Organization> organization() {
+        String email = generateUniqueEmail();
+        String username = email.substring(0, email.indexOf("@"));
+        return EntityBuilder
+                .of(Organization::new)
+                .with(Organization::setAlias, faker.internet().uuid())
+                .with(Organization::setCreatedBy, username)
+                .with(Organization::setCreatedDate, Instant.now());
     }
 }

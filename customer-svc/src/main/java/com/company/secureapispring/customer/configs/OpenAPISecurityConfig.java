@@ -25,17 +25,18 @@ public class OpenAPISecurityConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI().components(new Components()
-            .addSecuritySchemes(OAUTH_SCHEME_NAME, createOAuthScheme()))
-            .addSecurityItem(new SecurityRequirement().addList(OAUTH_SCHEME_NAME))
-            .info(new Info().title(env.getRequiredProperty("app.name"))
-                .description(env.getRequiredProperty("app.description"))
-                .version(buildProperties.getVersion()));
+                        .addSecuritySchemes(OAUTH_SCHEME_NAME, createOAuthScheme()))
+                .addSecurityItem(new SecurityRequirement().addList(OAUTH_SCHEME_NAME))
+                .info(new Info().title(env.getRequiredProperty("app.name"))
+                        .description(env.getRequiredProperty("app.description"))
+                        .version(buildProperties.getVersion()))
+                ;
     }
 
     private SecurityScheme createOAuthScheme() {
         OAuthFlows flows = createOAuthFlows();
         return new SecurityScheme().type(SecurityScheme.Type.OAUTH2)
-            .flows(flows);
+                .flows(flows);
     }
 
     private OAuthFlows createOAuthFlows() {
@@ -46,8 +47,10 @@ public class OpenAPISecurityConfig {
     private OAuthFlow createAuthorizationCodeFlow() {
         String authorizationUrl = env.getRequiredProperty("spring.security.oauth2.resourceserver.jwt.issuer-uri");
         return new OAuthFlow()
-            .authorizationUrl(authorizationUrl + "/protocol/openid-connect/auth")
-            .scopes(new Scopes().addString("read_access", "read data")
-                .addString("write_access", "modify data"));
+                .authorizationUrl(authorizationUrl + "/protocol/openid-connect/auth")
+                .scopes(new Scopes().addString("read_access", "read data")
+                        .addString("write_access", "modify data")
+                )
+                ;
     }
 }

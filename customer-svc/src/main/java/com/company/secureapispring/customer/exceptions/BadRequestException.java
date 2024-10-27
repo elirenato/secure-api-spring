@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BadRequestException extends RuntimeException implements ErrorResponse {
-    private Map<String, String> errors = new HashMap<>();
-    private ProblemDetail body;
+    private final Map<String, String> errors = new HashMap<>();
+    private final ProblemDetail body;
 
     public BadRequestException() {
         super("Invalid request content.");

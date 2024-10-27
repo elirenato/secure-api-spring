@@ -1,6 +1,10 @@
 package com.company.secureapispring.customer.entities;
 
+import com.company.secureapispring.auth.entities.Organization;
+import com.company.secureapispring.auth.interfaces.HasOrganization;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,8 +17,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "customers")
-public class Customer {
+public class Customer extends AbstractAuditingEntity implements HasOrganization {
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonView(Customer.ListJsonView.class)
     @EqualsAndHashCode.Include
     @Id
@@ -57,6 +62,12 @@ public class Customer {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "state_province_id")
     private StateProvince stateProvince;
+
+    @JsonIgnore
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id", updatable = false)
+    private Organization organization;
 
     public static class ListJsonView {
         private ListJsonView() {

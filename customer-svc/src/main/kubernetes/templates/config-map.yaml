@@ -1,7 +1,8 @@
+# Example of config map
 kind: ConfigMap
 apiVersion: v1
 metadata:
-    name: "secure-api-spring-main"
+    name: "customer-svc-main"
     namespace: default
 data:
     LOG_LEVEL: "ERROR"
@@ -9,5 +10,5 @@ data:
     DATASOURCE_JDBC_URL: ""
     SPRING_APP_PORT: "8081"
     SPRING_APP_CONTEXT_PATH: ""
-    CORS_ORIGINS: ""
-
+    CORS_ORIGINS: "*"
+    SPRING_PROFILE_ACTIVE: "dev"

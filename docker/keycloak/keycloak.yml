@@ -2,8 +2,8 @@
 services:
   keycloak:
     container_name: secure-api-spring-keycloak
-    image: quay.io/keycloak/keycloak:26.0.0
-    command: 'start-dev --import-realm'
+    image: quay.io/keycloak/keycloak:26.0.2
+    command: 'start-dev --import-realm --features organization'
     env_file:
       - ../.env # copy the .env.example as change the password as you wish
     environment:
