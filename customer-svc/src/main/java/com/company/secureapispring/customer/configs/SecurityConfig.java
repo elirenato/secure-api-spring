@@ -1,11 +1,15 @@
 package com.company.secureapispring.customer.configs;
 
+import com.company.secureapispring.customer.entities.AuditAwareImpl;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -29,10 +33,20 @@ import java.util.stream.Collectors;
 @Log4j2
 @Configuration
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@EnableJpaAuditing
+@EnableCaching
 public class SecurityConfig {
 
-    @Value("${cors.allowed-origins}")
-    private String[] allowedOrigins;
+    private final String[] allowedOrigins;
+
+    public SecurityConfig(Environment environment) {
+        this.allowedOrigins = environment.getRequiredProperty("cors.allowed-origins", String[].class);
+    }
+
+    @Bean
+    public AuditorAware<String> auditorProvider() {
+        return new AuditAwareImpl();
+    }
 
     // https://docs.spring.io/spring-security/reference/6.1/servlet/integrations/cors.html#page-title
     @Bean

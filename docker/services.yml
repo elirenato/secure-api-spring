@@ -1,5 +1,9 @@
 # Make sure to use a strong password and harden the configuration in case you expose image outside your local machine
 services:
+  redis:
+    extends:
+      file: ./redis.yml
+      service: redis
   postgresql:
     extends:
       file: ./postgresql/postgresql.yml

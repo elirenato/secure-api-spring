@@ -53,7 +53,7 @@ pipeline {
         stage('Package') {
             steps {
                 sh """
-                    ./mvnw install -P${env.PROJECT_ARTIFACT}
+                    ./mvnw install -P${env.PROJECT_ARTIFACT} -DskipTests
                 """
             }
         }

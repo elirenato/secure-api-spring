@@ -4,19 +4,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.company.secureapispring</groupId>
     <artifactId>secure-api-spring-parent</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.2</version>
+        <version>3.3.4</version>
     </parent>
     <properties>
         <java.version>21</java.version>
         <testcontainers.version>1.19.8</testcontainers.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <common-lib.version>0.0.1-SNAPSHOT</common-lib.version>
+        <auth-lib.version>0.0.1-SNAPSHOT</auth-lib.version>
     </properties>
     <dependencies>
         <dependency>
@@ -47,29 +47,42 @@
             </dependency>
             <dependency>
                 <groupId>com.company.secureapispring</groupId>
-                <artifactId>common-lib</artifactId>
-                <version>${common-lib.version}</version>
+                <artifactId>auth-lib</artifactId>
+                <version>${auth-lib.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.company.secureapispring</groupId>
-                <artifactId>common-lib</artifactId>
-                <version>${common-lib.version}</version>
+                <artifactId>auth-lib</artifactId>
+                <version>${auth-lib.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
-            <!-- A nice library that can be used to mock data for tests -->
-            <!-- http://github.com/DiUS/java-faker -->
-            <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
             <dependency>
-                <groupId>com.github.javafaker</groupId>
-                <artifactId>javafaker</artifactId>
-                <version>1.0.2</version>
+                <groupId>net.datafaker</groupId>
+                <artifactId>datafaker</artifactId>
+                <version>2.4.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>2.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>3.37.0</version>
+            </dependency>
+            <!-- Hibernate 2nd level cache -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-hibernate-6</artifactId>
+                <version>3.37.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -101,17 +114,24 @@
         </pluginManagement>
     </build>
 
-    <modules>
-        <module>common-lib</module>
-        <module>customer-svc</module>
-    </modules>
-
     <profiles>
         <profile>
             <id>customer-svc</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <modules>
-                <module>common-lib</module>
+                <module>auth-lib</module>
                 <module>customer-svc</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>auth-lib</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>auth-lib</module>
             </modules>
         </profile>
     </profiles>

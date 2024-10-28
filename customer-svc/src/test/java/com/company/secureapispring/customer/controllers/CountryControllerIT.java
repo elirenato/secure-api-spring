@@ -1,7 +1,9 @@
 package com.company.secureapispring.customer.controllers;
 
 
-import com.company.secureapispring.common.utils.TestJWTUtils;
+import com.company.secureapispring.customer.AbstractIT;
+import com.company.secureapispring.customer.CustomerSvcSpringBootAppTest;
+import com.company.secureapispring.customer.TestJWTUtils;
 import com.company.secureapispring.customer.entities.Country;
 import com.company.secureapispring.customer.entities.StateProvince;
 import com.company.secureapispring.customer.factory.EntityFactory;
@@ -9,13 +11,14 @@ import com.company.secureapispring.customer.repositories.CountryRepository;
 import com.company.secureapispring.customer.repositories.StateProvinceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc
+@CustomerSvcSpringBootAppTest
+@Transactional
 public class CountryControllerIT extends AbstractIT {
 
     private static final String ENDPOINT = "/countries";
@@ -55,7 +61,11 @@ public class CountryControllerIT extends AbstractIT {
         expectedCountries.sort(Comparator.comparing(Country::getName));
 
         mockMvc.perform(get(CountryControllerIT.ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("any")))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "any"
+                        )))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(expectedCountries.size())))
                 .andExpect(jsonPath("[0].name", equalTo(expectedCountries.getFirst().getName())))
@@ -105,7 +115,11 @@ public class CountryControllerIT extends AbstractIT {
 
         int lastIndex = expectedStateProvinces.size()-1;
         mockMvc.perform(get(getBaseEndpointForStateProvinces(country.getId()))
-                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader("any")))
+                        .header(HttpHeaders.AUTHORIZATION, TestJWTUtils.getAuthHeader(
+                                this.getDechatedUser(),
+                                this.getDetachedOrganization(),
+                                "any"
+                        )))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(expectedStateProvinces.size())))
                 .andExpect(jsonPath("[0].name", equalTo(expectedStateProvinces.getFirst().getName())))

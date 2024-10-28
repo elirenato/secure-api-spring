@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>customer-svc</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <parent>
         <groupId>com.company.secureapispring</groupId>
         <artifactId>secure-api-spring-parent</artifactId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <dependencies>
         <dependency>
@@ -37,18 +37,16 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.company.secureapispring</groupId>
-            <artifactId>common-lib</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
             <groupId>com.company.secureapispring</groupId>
-            <artifactId>common-lib</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
+            <artifactId>auth-lib</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -75,6 +73,23 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- Hibernate 2nd level cache -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-hibernate-6</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,0 +1,9 @@
+# Make sure to use a strong password and harden the configuration in case you expose image outside your local machine
+services:
+  redis:
+    container_name: secure-api-spring-redis
+    image: redis:bookworm
+    env_file:
+      - ./.env
+    ports:
+      - ${REDIS_PORT}

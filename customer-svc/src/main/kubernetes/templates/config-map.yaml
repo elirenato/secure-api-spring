@@ -1,13 +1,17 @@
+# Example of config map for K8s
 kind: ConfigMap
 apiVersion: v1
 metadata:
-    name: "secure-api-spring-main"
+    name: "customer-svc-main"
     namespace: default
 data:
     LOG_LEVEL: "ERROR"
-    OIDC_AUTH_SERVER_URL: ""
-    DATASOURCE_JDBC_URL: ""
+    OIDC_AUTH_SERVER_URL: "https://auth.example.com/realms/secure-api-spring"
+    DATASOURCE_JDBC_URL: "jdbc:postgresql://postgresql.default.svc.cluster.local:5432/customer-svc"
     SPRING_APP_PORT: "8081"
-    SPRING_APP_CONTEXT_PATH: ""
-    CORS_ORIGINS: ""
-
+    SPRING_APP_CONTEXT_PATH: "/customer-svc"
+    CORS_ORIGINS: "*"
+    SPRING_PROFILE_ACTIVE: "dev"
+    REDIS_HOST: "redis.default.svc.cluster.local"
+    REDIS_PORT: "6379"
+    REDIS_DATABASE: "0"
