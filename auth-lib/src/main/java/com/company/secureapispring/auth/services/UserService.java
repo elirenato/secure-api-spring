@@ -5,7 +5,6 @@ import com.company.secureapispring.auth.entities.User;
 import com.company.secureapispring.auth.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
-    private final CacheManager cacheManager;
 
     @Cacheable(cacheNames = CacheName.USER_BY_USERNAME, unless = "#result == null")
     public Optional<User> findByUsername(String username) {

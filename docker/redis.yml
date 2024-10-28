@@ -3,5 +3,7 @@ services:
   redis:
     container_name: secure-api-spring-redis
     image: redis:bookworm
+    env_file:
+      - ./.env
     ports:
       - ${REDIS_PORT}

@@ -9,7 +9,7 @@ singleServerConfig:
   password: null
   subscriptionsPerConnection: 5
   clientName: null
-  address: "redis://${REDIS_HOST_PORT:-localhost:6379}"
+  address: "redis://${REDIS_HOST:-localhost}:${REDIS_PORT:-6379}"
   subscriptionConnectionMinimumIdleSize: 1
   subscriptionConnectionPoolSize: ${REDIS_CONNECTION_POOL_SIZE:-5}
   connectionMinimumIdleSize: ${REDIS_CONNECTION_MINIMUM_IDLE_SIZE:-2}

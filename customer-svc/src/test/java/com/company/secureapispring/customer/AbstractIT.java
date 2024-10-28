@@ -36,7 +36,8 @@ public abstract class AbstractIT {
         System.setProperty("DATASOURCE_PASSWORD_TEST", dbContainer.getPassword());
 
         redis.start();
-        System.setProperty("REDIS_HOST_PORT", redis.getHost() + ":" + redis.getMappedPort(6379));
+        System.setProperty("REDIS_HOST", redis.getHost());
+        System.setProperty("REDIS_PORT", redis.getMappedPort(6379).toString());
     }
 
     @BeforeEach

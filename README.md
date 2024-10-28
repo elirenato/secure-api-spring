@@ -9,6 +9,7 @@ The project was bootstrapped using [Spring Initializer](https://start.spring.io/
 - Spring Security OAuth2 Resource Server (spring-boot-starter-oauth2-resource-server) to enable OIDC integration with Keycloak.
 - Jacoco for generating test coverage reports.
 - Spring Data and Hibernate Validator for data access and validation.
+- Redis is used as 2nd level cache (Using Redisson driver).
 - Spring Doc Open API for API documentation.
 - Liquibase with PostgreSQL as the database for managing database migrations.
 - [TestContainers](https://www.testcontainers.org/) to run tests in an isolated PostgreSQL database environment.
@@ -25,7 +26,7 @@ The project was bootstrapped using [Spring Initializer](https://start.spring.io/
 
 ### 1st step
 
-This example relies on Keycloak for authentication and PostgreSQL as the database. To start these dependencies, run the following commands:
+This example relies on Keycloak for authentication, PostgreSQL as the database as Redis for cache. To start these dependencies, run the following commands:
 
 ```bash
 ./task.sh services:up
@@ -106,7 +107,3 @@ The [docker](./docker) directory is not a Maven module.
 ## Jenkins
 
 See [here](./customer-svc/src/main/jenkins/README.md) for more details on how to build the Docker image using Jenkins, push the built image to the Docker Image Registry, and deploy it to Kubernetes.
-
-## In progress (TODO)
-- Test for auth lib.
-- Test for common lib.
