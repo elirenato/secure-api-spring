@@ -63,11 +63,11 @@ public class CustomerControllerIT extends AbstractIT {
     private StateProvince persistStateProvince() {
         Country country = EntityFactory
                 .country()
-                .persit(countryRepository);
+                .persist(countryRepository);
         return EntityFactory
                 .stateProvince()
                 .with(StateProvince::setCountry, country)
-                .persit(stateProvinceRepository);
+                .persist(stateProvinceRepository);
     }
 
     private EntityBuilder<Customer> customerBuilder(StateProvince stateProvince) {
@@ -80,11 +80,11 @@ public class CustomerControllerIT extends AbstractIT {
         return customerBuilder(stateProvince)
                 .with(Customer::setOrganization, organization)
                 .with(Customer::setCreatedBy, this.getDechatedUser().getUsername())
-                .persit(this.customerRepository);
+                .persist(this.customerRepository);
     }
 
     private Organization persistOrganization() {
-        return EntityFactory.organization().persit(this.organizationRepository);
+        return EntityFactory.organization().persist(this.organizationRepository);
     }
 
     @Test

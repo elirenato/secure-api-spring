@@ -49,15 +49,15 @@ public class CountryControllerIT extends AbstractIT {
         expectedCountries.add(EntityFactory
                 .country()
                         .with(Country::setAbbreviation, "USA")
-                .persit(countryRepository));
+                .persist(countryRepository));
         expectedCountries.add(EntityFactory
                 .country()
                 .with(Country::setAbbreviation, "BRA")
-                .persit(countryRepository));
+                .persist(countryRepository));
         expectedCountries.add(EntityFactory
                 .country()
                 .with(Country::setAbbreviation, "CAN")
-                .persit(countryRepository));
+                .persist(countryRepository));
         expectedCountries.sort(Comparator.comparing(Country::getName));
 
         mockMvc.perform(get(CountryControllerIT.ENDPOINT)
@@ -93,24 +93,24 @@ public class CountryControllerIT extends AbstractIT {
     public void testFindAllStateProvincesWhenAuthenticated() throws Exception {
         Country country = EntityFactory
                 .country()
-                .persit(countryRepository);
+                .persist(countryRepository);
 
         List<StateProvince> expectedStateProvinces = new ArrayList<>();
         expectedStateProvinces.add(EntityFactory
                 .stateProvince()
                 .with(StateProvince::setAbbreviation, "BC")
                 .with(StateProvince::setCountry, country)
-                .persit(stateProvinceRepository));
+                .persist(stateProvinceRepository));
         expectedStateProvinces.add(EntityFactory
                 .stateProvince()
                 .with(StateProvince::setAbbreviation, "AB")
                 .with(StateProvince::setCountry, country)
-                .persit(stateProvinceRepository));
+                .persist(stateProvinceRepository));
         expectedStateProvinces.add(EntityFactory
                 .stateProvince()
                 .with(StateProvince::setAbbreviation, "ON")
                 .with(StateProvince::setCountry, country)
-                .persit(stateProvinceRepository));
+                .persist(stateProvinceRepository));
         expectedStateProvinces.sort(Comparator.comparing(StateProvince::getName));
 
         int lastIndex = expectedStateProvinces.size()-1;
@@ -138,7 +138,7 @@ public class CountryControllerIT extends AbstractIT {
     public void testFindAllStateProvincesWithoutAuthentication() throws Exception {
         Country country = EntityFactory
                 .country()
-                .persit(countryRepository);
+                .persist(countryRepository);
         this.mockMvc.perform(
                         get(getBaseEndpointForStateProvinces(country.getId()))
                 )

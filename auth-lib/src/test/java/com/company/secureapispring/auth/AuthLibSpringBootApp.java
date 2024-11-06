@@ -1,6 +1,6 @@
 package com.company.secureapispring.auth;
 
-import com.company.secureapispring.auth.constants.CacheName;
+import com.company.secureapispring.auth.cache.CacheName;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;

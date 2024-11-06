@@ -31,13 +31,13 @@ public class StateProvinceServiceIT extends AbstractIT {
         Country country = EntityFactory
                 .country()
                 .with(Country::setAbbreviation, "CAN")
-                .persit(countryRepository);
+                .persist(countryRepository);
 
         EntityFactory
                 .stateProvince()
                 .with(StateProvince::setAbbreviation, "BC")
                 .with(StateProvince::setCountry, country)
-                .persit(stateProvinceRepository);
+                .persist(stateProvinceRepository);
 
         stateProvinceService.findAll(country.getId());
         stateProvinceService.findAll(country.getId());

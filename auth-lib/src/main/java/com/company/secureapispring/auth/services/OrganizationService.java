@@ -1,8 +1,7 @@
 package com.company.secureapispring.auth.services;
 
-import com.company.secureapispring.auth.constants.CacheName;
+import com.company.secureapispring.auth.cache.CacheName;
 import com.company.secureapispring.auth.entities.Organization;
-import com.company.secureapispring.auth.entities.User;
 import com.company.secureapispring.auth.repositories.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Optional;
 
 @RequiredArgsConstructor

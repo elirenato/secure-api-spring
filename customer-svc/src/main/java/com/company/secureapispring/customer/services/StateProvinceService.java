@@ -1,6 +1,6 @@
 package com.company.secureapispring.customer.services;
 
-import com.company.secureapispring.customer.constants.CacheName;
+import com.company.secureapispring.customer.cache.CacheName;
 import com.company.secureapispring.customer.entities.StateProvince;
 import com.company.secureapispring.customer.repositories.StateProvinceRepository;
 import lombok.RequiredArgsConstructor;

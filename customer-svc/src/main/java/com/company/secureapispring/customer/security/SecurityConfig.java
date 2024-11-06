@@ -1,6 +1,6 @@
-package com.company.secureapispring.customer.configs;
+package com.company.secureapispring.customer.security;
 
-import com.company.secureapispring.customer.entities.AuditAwareImpl;
+import com.company.secureapispring.auth.domain.AuditAwareImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;

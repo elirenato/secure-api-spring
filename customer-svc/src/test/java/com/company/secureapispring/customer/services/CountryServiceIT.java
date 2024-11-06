@@ -26,7 +26,7 @@ public class CountryServiceIT extends AbstractIT {
         EntityFactory
                 .country()
                 .with(Country::setAbbreviation, "USA")
-                .persit(countryRepository);
+                .persist(countryRepository);
 
         countryService.findAll();
         countryService.findAll();

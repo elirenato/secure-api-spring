@@ -1,19 +1,14 @@
-package com.company.secureapispring.customer.configs;
+package com.company.secureapispring.customer.cache;
 
-import com.company.secureapispring.customer.constants.CacheName;
-import jakarta.annotation.Resource;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
-import java.io.ObjectInputFilter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -39,11 +34,11 @@ public class CacheConfig {
         Map<String, org.redisson.spring.cache.CacheConfig> config = new HashMap<>();
         int oneHour = 3600 * 1000;
         config.put(
-                com.company.secureapispring.auth.constants.CacheName.USER_BY_USERNAME,
+                com.company.secureapispring.auth.cache.CacheName.USER_BY_USERNAME,
                 new org.redisson.spring.cache.CacheConfig(oneHour, oneHour)
         );
         config.put(
-                com.company.secureapispring.auth.constants.CacheName.ORG_BY_ALIAS,
+                com.company.secureapispring.auth.cache.CacheName.ORG_BY_ALIAS,
                 new org.redisson.spring.cache.CacheConfig(oneHour, oneHour)
         );
         config.put(CacheName.ALL_COUNTRIES, new org.redisson.spring.cache.CacheConfig(oneHour, oneHour));

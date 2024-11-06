@@ -1,4 +1,4 @@
-package com.company.secureapispring.customer.configs;
+package com.company.secureapispring.customer.security;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

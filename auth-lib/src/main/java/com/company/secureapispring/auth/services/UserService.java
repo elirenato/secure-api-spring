@@ -1,6 +1,6 @@
 package com.company.secureapispring.auth.services;
 
-import com.company.secureapispring.auth.constants.CacheName;
+import com.company.secureapispring.auth.cache.CacheName;
 import com.company.secureapispring.auth.entities.User;
 import com.company.secureapispring.auth.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;

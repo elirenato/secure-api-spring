@@ -1,7 +1,6 @@
 package com.company.secureapispring.customer.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Cache;
@@ -20,11 +19,9 @@ public class Country implements Serializable {
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @NotEmpty
     @Column
     private String abbreviation;
 
-    @NotEmpty
     @Column
     private String name;
 }

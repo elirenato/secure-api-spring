@@ -34,7 +34,7 @@ public final class EntityBuilder<T> {
         return instance;
     }
 
-    public <ID> T persit(JpaRepository<T, ID> repo) {
+    public <ID> T persist(JpaRepository<T, ID> repo) {
         T value = make();
         repo.save(value);
         return value;
