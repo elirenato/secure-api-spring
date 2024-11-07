@@ -6,4 +6,4 @@ services:
     env_file:
       - ./.env
     ports:
-      - ${REDIS_PORT}
+      - "${REDIS_PORT:-127.0.0.1:6379:6379}"
